@@ -287,7 +287,7 @@ with opCode2 select
             elsif(Instr1_isImmediate_without_sw_lw = '1') then 
                  finalOut <= Immprocess_out;
                  
-            elsif(Instr1_isJrtype = '1' or Instr1_isJtype = '1' or opCode1 = Beq or opCode1 = Bne ) then
+            elsif(Instr1_isJrtype = '1' or Instr1_isJtype = '1' or opCode1 = Beq or opCode1 = Bne or opCode1 = haltCPU ) then
                  finalOut <= Branch_Jump_process_out;
             
             elsif(opCode1 = sw) then 
