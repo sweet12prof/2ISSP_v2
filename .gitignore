@@ -19,7 +19,7 @@
 !*.v
 !*.bd
 !*.edif
-!*.schemas
+!*.pdf
 #########
 #IP files
 #########
