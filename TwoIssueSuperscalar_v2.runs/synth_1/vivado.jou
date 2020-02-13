@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.2.1 (64-bit)
+# SW Build 2729669 on Thu Dec  5 04:48:12 MST 2019
+# IP Build 2729494 on Thu Dec  5 07:38:25 MST 2019
+# Start of session at: Thu Feb 13 11:15:05 2020
+# Process ID: 2243
+# Current directory: /home/sweet12prof/Desktop/2ISSP_v2/TwoIssueSuperscalar_v2.runs/synth_1
+# Command line: vivado -log Two_Issue_Scheduler.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Two_Issue_Scheduler.tcl
+# Log file: /home/sweet12prof/Desktop/2ISSP_v2/TwoIssueSuperscalar_v2.runs/synth_1/Two_Issue_Scheduler.vds
+# Journal file: /home/sweet12prof/Desktop/2ISSP_v2/TwoIssueSuperscalar_v2.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source Two_Issue_Scheduler.tcl -notrace

@@ -252,7 +252,7 @@ with opCode2 select
             end process;
       
       
-      lw_as_Instr1  : process(opCode2, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype,rs1,rd2, rs2, rt2, Instr1, Instr2)  
+      lw_as_Instr1  : process(opCode2, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype, rt1, rs1,rd2, rs2, rt2, Instr1, Instr2)  
             begin 
                 if(Instr2_isImmediate_without_sw_lw = '1' and (rt1 /= rs2) and (rt1 /= rt2)) then
                     lwprocess_out <= '0' & Instr1 & Instr2;
@@ -279,7 +279,7 @@ with opCode2 select
                 end if;     
             end process;
         
- finalOutputProcess :    process(opCode1,  Instr1_isImmediate_without_sw_lw, Instr1_isJrtype, Instr1_isJtype, rd1, rd2, rs2, rt2, ALUprocess_out, Immprocess_out,Branch_Jump_process_out,Swprocess_out, lui_process_out, Is_JR )
+ finalOutputProcess :    process(opCode1,  Instr1_isImmediate_without_sw_lw, Instr1_isJrtype, Instr1_isJtype, rd1, rd2, rs2, rt2, ALUprocess_out, Immprocess_out,Branch_Jump_process_out,Swprocess_out, lwprocess_out, lui_process_out, Is_JR )
         begin 
             if((opCode1 = Rtype and Is_JR = '0')) then 
                 finalOut <=  ALUprocess_out;

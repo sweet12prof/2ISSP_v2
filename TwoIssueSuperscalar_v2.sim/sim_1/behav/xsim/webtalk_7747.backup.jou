@@ -2,8 +2,8 @@
 # Webtalk v2019.2.1 (64-bit)
 # SW Build 2729669 on Thu Dec  5 04:48:12 MST 2019
 # IP Build 2729494 on Thu Dec  5 07:38:25 MST 2019
-# Start of session at: Thu Feb 13 09:55:34 2020
-# Process ID: 15823
+# Start of session at: Thu Feb 13 09:08:02 2020
+# Process ID: 7747
 # Current directory: /home/sweet12prof/Desktop/2ISSP_v2/TwoIssueSuperscalar_v2.sim/sim_1/behav/xsim
 # Command line: wbtcv -mode batch -source /home/sweet12prof/Desktop/2ISSP_v2/TwoIssueSuperscalar_v2.sim/sim_1/behav/xsim/xsim.dir/Top_MemoryInterface_behav/webtalk/xsim_webtalk.tcl -notrace
 # Log file: /home/sweet12prof/Desktop/2ISSP_v2/TwoIssueSuperscalar_v2.sim/sim_1/behav/xsim/webtalk.log
