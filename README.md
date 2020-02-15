@@ -17,7 +17,7 @@ Included in this repo is the new schema and a powerpoint/pdf listing the changes
   there are no data or control dependences between them.
 * For an ideal case, where all pairs of instructions are not dependent on  each other, and also consist of only correctly       predicted branch instructions this CPU design records a CPI = 1, an IPC = 2 and also twice the throughput of a single         scalar pipeline design.
 * CPI > 1 and IPC >= 1 for non ideal cases, which is mostly the case.
-* The design's branch logic is also based on an  **Always-not-taken** prediction scheme.(Working on an advanced branch           predictor though)
+* The design's branch logic is based on an  **Always-not-taken** prediction scheme.(Working on an advanced branch           predictor though)
 * In the case of a data dependency, the sceond instruction in the pair shuffled out and replaced by a nop,
   and the pc set to point to the swapped instruction.
 * In the worst case scenario, where all pairs are dependent, the processor acts as a single-scalar pipeline.
