@@ -137,23 +137,43 @@ with opCode1 select
     
     ALU_as_Instr1 : process(opCode2, Instr2_isImmediate, Instr2_isJrtype, Instr2_isJtype, rd1, rd2, rs2, rt2, Instr1, Instr2)
         begin 
-            if(Instr2_isImmediate = '1' and ((rd1 /= rs2) and (rd1 /= rt2))) then 
-               ALUprocess_out <= '0' & Instr1 & Instr2 ;
+            if(Instr2_isImmediate = '1') then 
+                if ((rd1 /= rs2) and (rd1 /= rt2)) then 
+                       ALUprocess_out <= '0' & Instr1 & Instr2 ;
+                else 
+                       ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
+                end if;
             
-            elsif(opCode2 = Rtype and (rd1 /= rd2) and (rd1 /= rs2) and (rd1 /= rt2)) then 
-                ALUprocess_out <= '0' & Instr1 & Instr2 ;
+            elsif(opCode2 = Rtype) then 
+                 if ((rd1 /= rd2) and (rd1 /= rs2) and (rd1 /= rt2)) then 
+                        ALUprocess_out <= '0' & Instr1 & Instr2 ;
+                 else 
+                        ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
+                 end if;
             
-            elsif((opCode2 = Beq or opCode2 = Bne) and (rd1 /= rs2) and (rd1 /= rt2 )) then 
-                ALUprocess_out <= '0' & Instr2 & Instr1;
+            elsif((opCode2 = Beq or opCode2 = Bne)) then
+                if ((rd1 /= rs2) and (rd1 /= rt2 )) then 
+                       ALUprocess_out <= '0' & Instr2 & Instr1;
+                else
+                       ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
+                end if;
             
-            elsif(opCode2 = lui and (rd1 /= rt2)) then 
-                ALUprocess_out <= '0' & Instr1 & Instr2;
+            elsif(opCode2 = lui) then 
+                if (rd1 /= rt2) then 
+                    ALUprocess_out <= '0' & Instr1 & Instr2;
+                else 
+                    ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
+                end if;
                 
             elsif(Instr2_isJtype = '1') then 
                 ALUprocess_out <= '0' & Instr2 & Instr1;
             
-            elsif( Instr2_isJrtype = '1' and rd1 /=  rs2) then 
+            elsif( Instr2_isJrtype = '1') then 
+               if( rd1 /=  rs2) then 
                  ALUprocess_out <= '0' & Instr2 & Instr1;
+               else 
+                ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
+               end if;
             else 
                 ALUprocess_out <= '1' & Instr1 & x"0000_0000";
             end if;
@@ -170,23 +190,43 @@ with opCode2 select
     
     Immediate_as_Instr1 : process(opCode2, Instr2_isImmediate, Instr2_isJrtype, Instr2_isJtype, rt1, rt2, rs2, rd2, Instr1, Instr2)
         begin 
-            if( Instr2_isImmediate = '1' and (rt1 /= rt2) and (rt1 /= rs2) ) then 
-                Immprocess_out <= '0' & Instr1 & Instr2;
+            if( Instr2_isImmediate = '1') then 
+               if (rt1 /= rt2) and (rt1 /= rs2)  then 
+                    Immprocess_out <= '0' & Instr1 & Instr2;
+               else 
+                    Immprocess_out <= '1' & Instr1 & x"0000_0000";
+            end if;
             
-            elsif(opCode2 = RType and (rt1 /= rd2) and (rt1 /= rs2) and (rt1 /= rt2)) then 
-                Immprocess_out <= '0' & Instr1 & Instr2;
+            elsif(opCode2 = RType) then 
+                if ((rt1 /= rd2) and (rt1 /= rs2) and (rt1 /= rt2)) then 
+                    Immprocess_out <= '0' & Instr1 & Instr2;
+                else 
+                    Immprocess_out <= '1' & Instr1 & x"0000_0000";
+                end if;
             
-            elsif((opCode2 = Beq or opCode2 = Bne) and (rt1 /= rs2) and (rt1 /= rt2)) then 
-                Immprocess_out <= '0' & Instr2 & Instr1;
+            elsif((opCode2 = Beq or opCode2 = Bne)) then 
+                if (rt1 /= rs2) and (rt1 /= rt2) then 
+                    Immprocess_out <= '0' & Instr2 & Instr1;
+                else 
+                    Immprocess_out <= '1' & Instr1 & x"0000_0000";
+                end if;
             
-            elsif(opCode2 = lui and (rt1 /= rt2)) then 
-                Immprocess_out <= '0' & Instr1 & Instr2;
+            elsif(opCode2 = lui) then 
+                if (rt1 /= rt2) then 
+                    Immprocess_out <= '0' & Instr1 & Instr2;
+                else 
+                    Immprocess_out <= '1' & Instr1 & x"0000_0000";
+                end if;
             
             elsif(Instr2_isJtype = '1') then 
                 Immprocess_out <= '0' & Instr2 & Instr1;
             
-            elsif(Instr2_isJrtype = '1' and (rt1 /= rs2)) then 
-                Immprocess_out <= '0' & Instr2 & Instr1;    
+            elsif(Instr2_isJrtype = '1') then 
+                if (rt1 /= rs2) then 
+                    Immprocess_out <= '0' & Instr2 & Instr1;  
+                else 
+                    Immprocess_out <= '1' & Instr1 & x"0000_0000";  
+                end if;
             
             else 
                 Immprocess_out <= '1' & Instr1 & x"0000_0000";
@@ -201,23 +241,43 @@ with opCode2 select
       
       sw_as_Instr1 : process(opCode2, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype,rs1,rd2, rs2, rt2, Instr1, Instr2)
             begin 
-                if(Instr2_isImmediate_without_sw_lw = '1' and (rs1 /= rs2) and (rs1 /= rt2)) then
-                    Swprocess_out <= '0' & Instr1 & Instr2;
+                if(Instr2_isImmediate_without_sw_lw = '1') then 
+                   if (rs1 /= rs2) and (rs1 /= rt2) then
+                      Swprocess_out <= '0' & Instr1 & Instr2;
+                   else
+                      Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                   end if;
                 
-                elsif(opCode2 = Rtype and (rs1 /= rs2 ) and ( rs1 /= rt2) and ( rs1 /= rd2) ) then 
-                    Swprocess_out <= '0' & Instr1 & Instr2;
+                elsif(opCode2 = Rtype) then 
+                   if ((rs1 /= rs2 ) and ( rs1 /= rt2) and ( rs1 /= rd2)) then 
+                        Swprocess_out <= '0' & Instr1 & Instr2;
+                   else 
+                        Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                   end if;
                 
-                elsif((opcode2 = Beq or  opCode2 = Bne ) and (rs1 /= rs2) and (rs1 /= rt2) ) then 
-                    Swprocess_out <= '0' & Instr2 & Instr1;
+                elsif((opcode2 = Beq or  opCode2 = Bne )) then 
+                    if (rs1 /= rs2) and (rs1 /= rt2)  then 
+                        Swprocess_out <= '0' & Instr2 & Instr1;
+                    else 
+                        Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                 
-                elsif(opCode2 = lui and (rs1 /= rt2)) then 
-                    Swprocess_out <= '0' & Instr1 & Instr2;
+                elsif(opCode2 = lui) then  
+                    if (rs1 /= rt2) then 
+                        Swprocess_out <= '0' & Instr1 & Instr2;
+                    else 
+                        Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                 
                 elsif (Instr2_isJtype = '1') then 
                     Swprocess_out <= '0' & Instr2 & Instr1;
                     
-                elsif (Instr2_isJrtype = '1' and (rs1 /= rs2)) then 
-                    Swprocess_out <= '0' & Instr2 & Instr1;
+                elsif (Instr2_isJrtype = '1') then 
+                    if (rs1 /= rs2) then 
+                        Swprocess_out <= '0' & Instr2 & Instr1;
+                    else 
+                        Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                     
                 elsif((opCode2 = sw or opCode2 = lw) ) then
                     Swprocess_out <= '1' & Instr1 & x"0000_0000";
@@ -229,23 +289,43 @@ with opCode2 select
       
       lui_as_Instr1 : process(opCode2, Instr2_isImmediate, Instr2_isJrtype, Instr2_isJtype,rt1,rd2, rs2, rt2, Instr1, Instr2) 
             begin 
-                if(opCode2 = RType and (rt1 /= rd2) and (rt1 /= rs2) and (rt1 /= rt2)) then 
-                    lui_process_out <= '0' & Instr1 & Instr2;
+                if(opCode2 = RType and (rt1 /= rd2)) then
+                     if((rt1 /= rs2) and (rt1 /= rt2)) then 
+                         lui_process_out <= '0' & Instr1 & Instr2;
+                     else
+                        lui_process_out <= '1' & Instr1 & x"0000_0000";
+                     end if;
                 
-                elsif(Instr2_isImmediate = '1' and (rt1 /= rs2) and (rt1 /= rt2)) then 
-                    lui_process_out <= '0' & Instr1 & Instr2;
+                elsif(Instr2_isImmediate = '1') then 
+                    if((rt1 /= rs2) and (rt1 /= rt2)) then 
+                        lui_process_out <= '0' & Instr1 & Instr2;
+                    else
+                        lui_process_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                
-               elsif((opCode2 = Beq or opCode2 = Bne) and (rt1 /= rs2) and (rt1 /= rt2)) then     
-                    lui_process_out <= '0' & Instr2 & Instr1;
+               elsif((opCode2 = Beq or opCode2 = Bne)) then 
+                   if((rt1 /= rs2) and (rt1 /= rt2)) then     
+                         lui_process_out <= '0' & Instr2 & Instr1;
+                   else
+                         lui_process_out <= '1' & Instr1 & x"0000_0000";
+                   end if;
                
-               elsif(Instr2_isJrtype= '1' and (rt1 /= rs2)) then 
-                    lui_process_out <= '0' & Instr2 & Instr1;
+               elsif(Instr2_isJrtype= '1') then  
+                    if(rt1 /= rs2) then 
+                        lui_process_out <= '0' & Instr2 & Instr1;
+                    else
+                        lui_process_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                
                elsif(Instr2_isJtype = '1') then 
                     lui_process_out <= '0' & Instr2 & Instr1;
                    
-               elsif(opCode2 = lui and  ( rt1 /= rt2)) then 
-                    lui_process_out <= '0' & Instr1 & Instr2;
+               elsif(opCode2 = lui) then 
+                  if(( rt1 /= rt2)) then 
+                        lui_process_out <= '0' & Instr1 & Instr2;
+                  else
+                        lui_process_out <= '1' & Instr1 & x"0000_0000";
+                  end if;
                else 
                     lui_process_out <= '1' & Instr1 & x"0000_0000";
                 end if;
@@ -254,23 +334,43 @@ with opCode2 select
       
       lw_as_Instr1  : process(opCode2, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype, rt1, rs1,rd2, rs2, rt2, Instr1, Instr2)  
             begin 
-                if(Instr2_isImmediate_without_sw_lw = '1' and (rt1 /= rs2) and (rt1 /= rt2)) then
-                    lwprocess_out <= '0' & Instr1 & Instr2;
+                if(Instr2_isImmediate_without_sw_lw = '1') then 
+                    if(rt1 /= rs2) and (rt1 /= rt2) then
+                        lwprocess_out <= '0' & Instr1 & Instr2;
+                    else
+                        lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                 
-                elsif(opCode2 = Rtype and (rt1 /= rs2 ) and ( rt1 /= rt2) and ( rt1 /= rd2) ) then 
-                    lwprocess_out <= '0' & Instr1 & Instr2;
+                elsif(opCode2 = Rtype)then 
+                    if (rt1 /= rs2 ) and ( rt1 /= rt2) and ( rt1 /= rd2) then 
+                        lwprocess_out <= '0' & Instr1 & Instr2;
+                    else 
+                        lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                 
-                elsif((opcode2 = Beq or  opCode2 = Bne ) and (rt1 /= rs2) and (rt1 /= rt2) ) then 
-                    lwprocess_out <= '0' & Instr2 & Instr1;
+                elsif((opcode2 = Beq or  opCode2 = Bne )) then 
+                    if((rt1 /= rs2) and (rt1 /= rt2) ) then 
+                        lwprocess_out <= '0' & Instr2 & Instr1;
+                    else 
+                        lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                 
-                elsif(opCode2 = lui and (rt1 /= rt2)) then 
-                    lwprocess_out <= '0' & Instr1 & Instr2;
+                elsif(opCode2 = lui) then 
+                    if(rt1 /= rt2) then 
+                        lwprocess_out <= '0' & Instr1 & Instr2;
+                    else 
+                        lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
                 
                 elsif (Instr2_isJtype = '1') then 
                     lwprocess_out <= '0' & Instr2 & Instr1;
                     
-                elsif (Instr2_isJrtype = '1' and (rt1 /= rs2)) then 
-                    lwprocess_out <= '0' & Instr2 & Instr1;
+                elsif (Instr2_isJrtype = '1')then 
+                     if(rt1 /= rs2) then 
+                        lwprocess_out <= '0' & Instr2 & Instr1;
+                     else 
+                        lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                     end if;
                     
                 elsif((opCode2 = sw or opCode2 = lw) ) then
                     lwprocess_out <= '1' & Instr1 & x"0000_0000";

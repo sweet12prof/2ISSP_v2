@@ -1,11 +1,14 @@
 #-----------------------------------------------------------
-# Vivado v2019.2.1 (64-bit)
-# SW Build 2729669 on Thu Dec  5 04:49:17 MST 2019
-# IP Build 2729494 on Thu Dec  5 07:38:25 MST 2019
-# Start of session at: Tue Feb 11 19:48:44 2020
-# Process ID: 2340
-# Current directory: C:/Users/TI Lab/Desktop/Project/February/2ISSP_v2
-# Command line: vivado.exe C:\Users\TI Lab\Desktop\Project\February\2ISSP_v2\TwoIssueSuperscalar_v2.xpr
-# Log file: C:/Users/TI Lab/Desktop/Project/February/2ISSP_v2/vivado.log
-# Journal file: C:/Users/TI Lab/Desktop/Project/February/2ISSP_v2\vivado.jou
+# Vivado v2019.2 (64-bit)
+# SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
+# IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
+# Start of session at: Mon Apr 27 13:42:18 2020
+# Process ID: 5304
+# Current directory: C:/Users/Yankey/Desktop/Projects/2ISSP_v2
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent5184 C:\Users\Yankey\Desktop\Projects\2ISSP_v2\TwoIssueSuperscalar_v2.xpr
+# Log file: C:/Users/Yankey/Desktop/Projects/2ISSP_v2/vivado.log
+# Journal file: C:/Users/Yankey/Desktop/Projects/2ISSP_v2\vivado.jou
 #-----------------------------------------------------------
+start_gui
+open_project C:/Users/Yankey/Desktop/Projects/2ISSP_v2/TwoIssueSuperscalar_v2.xpr
+update_compile_order -fileset sources_1
