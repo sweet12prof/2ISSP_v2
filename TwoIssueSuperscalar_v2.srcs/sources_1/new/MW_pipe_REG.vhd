@@ -49,6 +49,8 @@ entity MW_pipe_REG is
             W2_writeReg_M       : in std_logic_vector(4 downto 0); 
             W2_overflow_M       : in std_logic;
             
+            pcM                  : in  std_logic_vector(31 downto 0);
+            
             
             CU_Signals_W        : out std_logic_vector(CU_signals_Width - 1 downto 0);
             W1_ALUout_W         : out std_logic_vector(31 downto 0);
@@ -59,7 +61,9 @@ entity MW_pipe_REG is
             W2_ALUout_W         : out std_logic_vector(31 downto 0);
             W2_ReadData_W       : out std_logic_vector(31 downto 0);
             W2_writeReg_W       : out std_logic_vector(4 downto 0);
-            W2_overflow_W       : out std_logic
+            W2_overflow_W       : out std_logic;
+            
+            pcW                  :  out  std_logic_vector(31 downto 0)
               
         );
 end MW_pipe_REG;
@@ -83,6 +87,7 @@ MW_pipe_REG_process : process(clk, reset)
                                 W2_writeReg_W   <= ( others => '0');
                                 W2_overflow_W  <= '0';
                                 
+                                pcW             <= ( others => '0');
                              
                              elsif(rising_edge(clk))    then 
                                 CU_Signals_W    <=     CU_Signals_M  ;
@@ -96,6 +101,8 @@ MW_pipe_REG_process : process(clk, reset)
                                 W2_ReadData_W   <=     W2_ReadData_M ;
                                 W2_writeReg_W   <=     W2_writeReg_M ;
                                 W2_overflow_W   <=     W2_overflow_M;
+                                
+                                pcW             <= pcM;
                                
                             end if;
                         end process;

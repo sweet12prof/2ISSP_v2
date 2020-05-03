@@ -151,8 +151,20 @@ entity Datapath is
             HU_W1_ForwardBE                 : in std_logic_vector(2 downto 0);
                                             
             HU_W2_ForwardAE                 : in std_logic_vector(2 downto 0);
-            HU_W2_ForwardBE                 : in std_logic_vector(2 downto 0)
-                        
+            HU_W2_ForwardBE                 : in std_logic_vector(2 downto 0);
+            
+            ----------------------------------------------------------
+            -- Exception Unit
+            -----------------------------------------------------------------------
+            EPCWrite                        : in std_logic;                        
+            Cause_W1_Write                  : in std_logic;                        
+            Cause_W2_Write                  : in std_logic;                        
+                                              
+            whichWay                        : in  std_logic_vector(31 downto 0);   
+                                             
+            Cause_W1_Code                   : in std_logic_vector(31 downto 0);    
+            Cause_W2_Code                   : in std_logic_vector(31 downto 0);
+            PCBit                           : in std_logic  
         );
 end Datapath;
 
@@ -450,6 +462,35 @@ architecture Behavioral of Datapath is
                             
                      );
                 end component;
+                
+                component CauseReg 
+                  Port (    
+                            clk, En : in std_logic;
+                            d       : in std_logic_vector(31 downto 0);
+                            q       : out std_logic_vector(31 downto 0)
+                        );
+                end component;
+                
+                component EPC 
+                  Port (
+                            clk, En : in std_logic;
+                            d       : in std_logic_vector(31 downto 0);
+                            q       : out std_logic_vector(31 downto 0)
+                         );
+                end component;
+                
+                component whichway_Reg is
+                 Port ( 
+                            clk, En : in std_logic;
+                            d       : in std_logic_vector(31 downto 0);
+                            q       : out std_logic_vector(31 downto 0)
+                         );
+                end component;
+                
+              
+                    
+                
+                
 
              
 

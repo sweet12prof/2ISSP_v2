@@ -56,6 +56,7 @@ entity DE_pipe_REG is
             W2_ZeroPad_D    :   in std_logic_vector(31 downto 0);    
             
             PCplus4_8D      :   in std_logic_vector(31 downto 0);
+            pcD             :   in std_logic_vector(31 downto 0);
             
             
             CU_SignalsE     :   out std_logic_vector(CU_Signals_Width - 1 downto 0);         
@@ -75,7 +76,8 @@ entity DE_pipe_REG is
             W2_SignImm_E    :   out std_logic_vector(31 downto 0);
             W2_ZeroPad_E    :   out std_logic_vector(31 downto 0);    
                                 
-            PCplus4_8E      :   out std_logic_vector(31 downto 0)         
+            PCplus4_8E      :   out std_logic_vector(31 downto 0);
+            pcE             :  out  std_logic_vector(31 downto 0)     
             
         );
 end DE_pipe_REG;
@@ -105,6 +107,7 @@ DE_pipe_rEG_PROCESS : process(clk, reset )
                                 W2_ZeroPad_E   <=    (others => '0') ;
                                                                      
                                 PCplus4_8E     <=    (others => '0') ;
+                                pcE            <=    (others => '0');
                              
                             elsif (rising_edge(clk)) then 
                                 if(flushE = '1') then 
@@ -126,6 +129,7 @@ DE_pipe_rEG_PROCESS : process(clk, reset )
                                     W2_ZeroPad_E   <=    (others => '0') ;
                                                          
                                     PCplus4_8E     <=    (others => '0') ;
+                                    pcE            <=    (others => '0');
                                     
                                  else 
                                       CU_SignalsE    <=    CU_SignalsD   ; 
@@ -145,7 +149,8 @@ DE_pipe_rEG_PROCESS : process(clk, reset )
                                       W2_SignImm_E   <=    W2_SignImm_D  ; 
                                       W2_ZeroPad_E   <=    W2_ZeroPad_D  ; 
                                     
-                                      PCplus4_8E     <=    PCplus4_8D    ;     
+                                      PCplus4_8E     <=    PCplus4_8D    ; 
+                                      pcE            <=    pcD;    
                                  end if;                              
                             end if;
                         end process; 
