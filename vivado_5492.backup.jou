@@ -1,0 +1,49 @@
+#-----------------------------------------------------------
+# Vivado v2019.2 (64-bit)
+# SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
+# IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
+# Start of session at: Sun May  3 14:14:24 2020
+# Process ID: 5492
+# Current directory: C:/Users/Yankey/Desktop/Projects/MasterScalar/2ISSP_v2
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent7800 C:\Users\Yankey\Desktop\Projects\MasterScalar\2ISSP_v2\TwoIssueSuperscalar_v2.xpr
+# Log file: C:/Users/Yankey/Desktop/Projects/MasterScalar/2ISSP_v2/vivado.log
+# Journal file: C:/Users/Yankey/Desktop/Projects/MasterScalar/2ISSP_v2\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/Yankey/Desktop/Projects/MasterScalar/2ISSP_v2/TwoIssueSuperscalar_v2.xpr
+update_compile_order -fileset sources_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Adder8 [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+launch_simulation
+source Adder8.tcl
+add_force {/Adder8/Add8i1} -radix hex {35 0ns}
+add_force {/Adder8/Add8i2} -radix hex {19 0ns}
+run all
+add_force {/Adder8/Cin8} -radix hex {0 0ns}
+run all
+add_force {/Adder8/Add8i2} -radix hex {5b 0ns}
+run all
+add_force {/Adder8/Add8i2} -radix hex {d3 0ns}
+run all
+add_force {/Adder8/Add8i1} -radix hex {35 0ns}
+add_force {/Adder8/Add8i2} -radix hex {d3 0ns}
+add_force {/Adder8/Cin8} -radix hex {0 0ns}
+run all
+relaunch_sim
+add_force {/Adder8/Add8i1} -radix hex {35 0ns}
+add_force {/Adder8/Add8i2} -radix hex {D3 0ns}
+add_force {/Adder8/Cin8} -radix hex {0 0ns}
+run all
+add_force {/Adder8/Add8i1} -radix hex {9E 0ns}
+add_force {/Adder8/Add8i2} -radix hex {D3 0ns}
+run all
+relaunch_sim
+add_force {/Adder8/Add8i1} -radix hex {9E 0ns}
+add_force {/Adder8/Add8i2} -radix hex {D3 0ns}
+add_force {/Adder8/Cin8} -radix hex {0 0ns}
+run all
+close_sim

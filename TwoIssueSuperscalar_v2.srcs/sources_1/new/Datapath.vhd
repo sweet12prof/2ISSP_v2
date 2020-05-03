@@ -57,7 +57,10 @@ entity Datapath is
             Dmem_readData2_M                : in std_logic_vector(31 downto 0);
             
             DP_W1_unknownOp_W              : OUT std_logic;
-            DP_W2_unknownOp_W               : out std_logic;
+            DP_W2_unknownOp_W              : out std_logic;
+            
+            DP_W1_overflow                  : OUT std_logic;  
+            DP_W2_overflow                  : out std_logic; 
             --------------------------------
             ---CU Signals
             --------------------------------
@@ -330,7 +333,8 @@ architecture Behavioral of Datapath is
                     W1_rt_D         :   in std_logic_vector(4 downto 0);
                     W1_rd_D         :   in std_logic_vector(4 downto 0);
                     W1_SignImm_D    :   in std_logic_vector(31 downto 0);
-                    W1_ZeroPad_D    :   in std_logic_vector(31 downto 0);      
+                    W1_ZeroPad_D    :   in std_logic_vector(31 downto 0);
+                          
                     
                     W2_RD1_D        :   in std_logic_vector(31 downto 0);
                     W2_RD2_D        :   in std_logic_vector(31 downto 0);
@@ -389,11 +393,13 @@ architecture Behavioral of Datapath is
                        W1_writeData_E       : in std_logic_vector(31 downto 0);
                        W1_WriteReg_E        : in std_logic_vector(4 downto 0);
                        W1_zeroPad_E         : in std_logic_vector(31 downto 0);
+                       W1_overflow_E         : in std_logic;
                        
                        W2_ALUout_E          : in std_logic_vector(31 downto 0);
                        W2_writeData_E       : in std_logic_vector(31 downto 0);
                        W2_writeReg_E        : in std_logic_vector(4 downto 0);
                        W2_zeroPad_E         : in std_logic_vector(31 downto 0);
+                       W2_overflow_E         : in std_logic;
                        
                        CU_Signals_M         : OUT std_logic_vector(cu_EM_signalsWidth - 1 downto 0);
                        PC_Plus4_8_M         : OUT std_logic_vector(31 downto 0);
@@ -401,11 +407,13 @@ architecture Behavioral of Datapath is
                        W1_writeData_M       : OUT std_logic_vector(31 downto 0);
                        W1_WriteReg_M        : OUT std_logic_vector(4 downto 0);
                        W1_zeroPad_M         : OUT std_logic_vector(31 downto 0);
+                       W1_overflow_M        : Out std_logic;
                                               
                        W2_ALUout_M          : OUT std_logic_vector(31 downto 0);
                        W2_writeData_M       : OUT std_logic_vector(31 downto 0);
                        W2_writeReg_M        : OUT std_logic_vector(4 downto 0);
-                       W2_zeroPad_M         : OUT std_logic_vector(31 downto 0)                        
+                       W2_zeroPad_M         : OUT std_logic_vector(31 downto 0);
+                       W2_overflow_M        : Out std_logic                       
             );
         end component;
         
@@ -419,22 +427,26 @@ architecture Behavioral of Datapath is
                         W1_ALUout_M         : in std_logic_vector(31 downto 0);
                         W1_ReadData_M       : in std_logic_vector(31 downto 0);
                         W1_writeReg_M       : in std_logic_vector(4 downto 0);
+                        W1_overflow_M       : in std_logic;
                         
                         
                         W2_ALUout_M         : in std_logic_vector(31 downto 0);
                         W2_ReadData_M       : in std_logic_vector(31 downto 0);
-                        W2_writeReg_M       : in std_logic_vector(4 downto 0); 
+                        W2_writeReg_M       : in std_logic_vector(4 downto 0);
+                        W2_overflow_M       : in std_logic; 
                         
                         
                         CU_Signals_W        : out std_logic_vector(CU_signals_Width - 1 downto 0);
                         W1_ALUout_W         : out std_logic_vector(31 downto 0);
                         W1_ReadData_W       : out std_logic_vector(31 downto 0);
                         W1_writeReg_W       : out std_logic_vector(4 downto 0);
+                        W1_overflow_W      : out std_logic;
                         
                                              
                         W2_ALUout_W         : out std_logic_vector(31 downto 0);
                         W2_ReadData_W       : out std_logic_vector(31 downto 0);
-                        W2_writeReg_W       : out std_logic_vector(4 downto 0) 
+                        W2_writeReg_W       : out std_logic_vector(4 downto 0);
+                        W2_overflow_W      : out std_logic
                             
                      );
                 end component;
@@ -615,10 +627,10 @@ architecture Behavioral of Datapath is
      
      
      SIGNAL CU1_memtoReg_W                   : STD_LOGIC;
-     SIGNAL CU2_memtoReg_W, overflow                   : STD_LOGIC;
+     SIGNAL CU2_memtoReg_W, overflow1, overflow2                   : STD_LOGIC;
      
      signal CU1_unknownOp_W                 :  std_logic;
-     signal CU2_unknownOp_W                 :  std_logic;  
+     signal CU2_unknownOp_W,  W1_overflow_M,  W2_overflow_M, W1_overflow_W, W2_overflow_W                 :  std_logic;  
      
      
      
@@ -1074,7 +1086,7 @@ W1_ALU_MAP              :   alu port map (
                                           output             =>     W1_ALUout_E,  
                                           zero               =>     open,
                                           carryOut           =>     open,
-                                          overflow           =>     overflow       
+                                          overflow           =>     overflow1       
                                       );
                                       
 
@@ -1085,7 +1097,7 @@ W2_ALU_MAP              :   alu port map (
                                           output             =>     W2_ALUout_E,  
                                           zero               =>     open,
                                           carryOut           =>     open,
-                                          overflow           =>     overflow       
+                                          overflow           =>     overflow2       
                                       );                                      
 
 
@@ -1135,7 +1147,13 @@ EM_pipe_REG_MAP     : EM_pipe_REG   generic map(11)
                                                 W2_ALUout_M      =>       W2_ALUout_M     ,
                                                 W2_writeData_M   =>       W2_writeData_M  ,
                                                 W2_writeReg_M    =>       W2_writeReg_M   ,
-                                                W2_zeroPad_M     =>       W2_zeroPad_M                                                   
+                                                W2_zeroPad_M     =>       W2_zeroPad_M    ,
+                                                
+                                                 W1_overflow_E   =>       overflow1,
+                                                 W2_overflow_E   =>       overflow2,
+                                                 W1_overflow_M   =>       W1_overflow_M,
+                                                 W2_overflow_M   =>       W2_overflow_M
+                                                                                          
                                                     );
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -1220,23 +1238,25 @@ CU_ControlSigs_M_W <= CU1_ControlSigs_M_W & CU2_ControlSigs_M_W;
                                                 W1_ALUout_M         =>  W1_ALUoutMres,
                                                 W1_ReadData_M       =>  Dmem_readData1_M,
                                                 W1_writeReg_M       =>  W1_WriteReg_M,
+                                                W1_overflow_M       =>  W1_overflow_M,
                                                 
                                                                 
                                                 W2_ALUout_M         =>  W2_ALUoutMres,
                                                 W2_ReadData_M       =>  Dmem_readData2_M,
                                                 W2_writeReg_M       =>  W2_WriteReg_M,
-                                                 
+                                                W2_overflow_M       =>  W2_overflow_M,
                                                                 
                                                 CU_Signals_W        => CU_Signals_W   , 
                                                 W1_ALUout_W         => W1_ALUout_W    ,
                                                 W1_ReadData_W       => W1_ReadData_W  ,
                                                 W1_writeReg_W       => W1_writeReg_W  ,
+                                                W1_overflow_W       =>  W1_overflow_W,
                                                                                       
                                                                                       
                                                 W2_ALUout_W         => W2_ALUout_W    ,
                                                 W2_ReadData_W       => W2_ReadData_W  ,
-                                                W2_writeReg_W       => W2_writeReg_W  
-                                                   
+                                                W2_writeReg_W       => W2_writeReg_W  ,
+                                                W2_overflow_W       => W2_overflow_W  
                                            );                                              
  --------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------WriteBack STAGE LOGIC AND MAPS-------------------------------------------------------
@@ -1280,7 +1300,8 @@ DP_W1_unknownOp_W <= CU1_unknownOp_W;
 DP_W2_unknownOp_W <= CU2_unknownOp_W;
 
 
-
+DP_W1_overflow <= W1_overflow_W;
+DP_W2_overflow <= W2_overflow_W;
 
 
 

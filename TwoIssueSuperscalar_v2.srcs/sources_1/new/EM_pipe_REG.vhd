@@ -43,11 +43,13 @@ entity EM_pipe_REG is
            W1_writeData_E       : in std_logic_vector(31 downto 0);
            W1_WriteReg_E        : in std_logic_vector(4 downto 0);
            W1_zeroPad_E         : in std_logic_vector(31 downto 0);
+           W1_overflow_E         : in std_logic;
            
            W2_ALUout_E          : in std_logic_vector(31 downto 0);
            W2_writeData_E       : in std_logic_vector(31 downto 0);
            W2_writeReg_E        : in std_logic_vector(4 downto 0);
            W2_zeroPad_E         : in std_logic_vector(31 downto 0);
+           W2_overflow_E         : in std_logic;
            
            CU_Signals_M         : OUT std_logic_vector(cu_EM_signalsWidth - 1 downto 0);
            PC_Plus4_8_M         : OUT std_logic_vector(31 downto 0);
@@ -55,11 +57,13 @@ entity EM_pipe_REG is
            W1_writeData_M       : OUT std_logic_vector(31 downto 0);
            W1_WriteReg_M        : OUT std_logic_vector(4 downto 0);
            W1_zeroPad_M         : OUT std_logic_vector(31 downto 0);
+           W1_overflow_M         : OUT std_logic;
                                   
            W2_ALUout_M          : OUT std_logic_vector(31 downto 0);
            W2_writeData_M       : OUT std_logic_vector(31 downto 0);
            W2_writeReg_M        : OUT std_logic_vector(4 downto 0);
-           W2_zeroPad_M         : OUT std_logic_vector(31 downto 0)                        
+           W2_zeroPad_M         : OUT std_logic_vector(31 downto 0);
+           W2_overflow_M         : out std_logic           
         );
 end EM_pipe_REG;
 
@@ -76,11 +80,13 @@ EM_pipe_REG_process : process(clk, reset)
                                 W1_writeData_M   <= (others => '0');
                                 W1_WriteReg_M    <= (others => '0');
                                 W1_zeroPad_M     <= (others => '0');
+                                W1_overflow_M    <= '0';
                                                
                                 W2_ALUout_M      <= (others => '0');
                                 W2_writeData_M   <= (others => '0');
                                 W2_writeReg_M    <= (others => '0');
                                 W2_zeroPad_M     <= (others => '0');
+                                W2_overflow_M    <= '0';
                                 
                             elsif(rising_edge(clk)) then 
                                 CU_Signals_M     <=    CU_Signals_E   ;

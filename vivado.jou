@@ -140,3 +140,31 @@ relaunch_sim
 add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
 add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
 run all
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top ALU [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+close_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top ALU [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+launch_simulation
+source ALU.tcl
+add_force {/ALU/ALUinput1} -radix hex {FFFF_FFFF 0ns}
+add_force {/ALU/ALUinput1} -radix hex {FFFFFFFF 0ns}
+add_force {/ALU/ALUinput2} -radix dec {-1298034 0ns}
+add_force {/ALU/ALUctrl} -radix bin {1010 0ns}
+run all
+relaunch_sim
+add_force {/ALU/ALUinput1} -radix hex {80000000 0ns}
+add_force {/ALU/ALUinput2} -radix hex {80000000 0ns}
+add_force {/ALU/ALUctrl} -radix hex {0010 0ns}
+add_force {/ALU/ALUctrl} -radix unsigned {0010 0ns}
+add_force {/ALU/ALUctrl} -radix bin {0010 0ns}
+run all
+close_sim

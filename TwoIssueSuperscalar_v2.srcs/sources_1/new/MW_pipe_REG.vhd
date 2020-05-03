@@ -41,21 +41,25 @@ entity MW_pipe_REG is
             W1_ALUout_M         : in std_logic_vector(31 downto 0);
             W1_ReadData_M       : in std_logic_vector(31 downto 0);
             W1_writeReg_M       : in std_logic_vector(4 downto 0);
+            W1_overflow_M       : in std_logic;
             
             
             W2_ALUout_M         : in std_logic_vector(31 downto 0);
             W2_ReadData_M       : in std_logic_vector(31 downto 0);
             W2_writeReg_M       : in std_logic_vector(4 downto 0); 
+            W2_overflow_M       : in std_logic;
             
             
             CU_Signals_W        : out std_logic_vector(CU_signals_Width - 1 downto 0);
             W1_ALUout_W         : out std_logic_vector(31 downto 0);
             W1_ReadData_W       : out std_logic_vector(31 downto 0);
             W1_writeReg_W       : out std_logic_vector(4 downto 0);
+            W1_overflow_W       : out std_logic;
                                  
             W2_ALUout_W         : out std_logic_vector(31 downto 0);
             W2_ReadData_W       : out std_logic_vector(31 downto 0);
-            W2_writeReg_W       : out std_logic_vector(4 downto 0) 
+            W2_writeReg_W       : out std_logic_vector(4 downto 0);
+            W2_overflow_W       : out std_logic
               
         );
 end MW_pipe_REG;
@@ -71,11 +75,13 @@ MW_pipe_REG_process : process(clk, reset)
                                 W1_ALUout_W     <= ( others => '0');
                                 W1_ReadData_W   <= ( others => '0');
                                 W1_writeReg_W   <= ( others => '0');
+                                W1_overflow_W  <= '0';
                                 
                                                 
                                 W2_ALUout_W     <= ( others => '0');
                                 W2_ReadData_W   <= ( others => '0');
                                 W2_writeReg_W   <= ( others => '0');
+                                W2_overflow_W  <= '0';
                                 
                              
                              elsif(rising_edge(clk))    then 
@@ -83,11 +89,13 @@ MW_pipe_REG_process : process(clk, reset)
                                 W1_ALUout_W     <=     W1_ALUout_M   ;
                                 W1_ReadData_W   <=     W1_ReadData_M ;
                                 W1_writeReg_W   <=     W1_writeReg_M ;
+                                W1_overflow_W   <=     W1_overflow_M;
                                 
                                            
                                 W2_ALUout_W     <=     W2_ALUout_M   ;
                                 W2_ReadData_W   <=     W2_ReadData_M ;
                                 W2_writeReg_W   <=     W2_writeReg_M ;
+                                W2_overflow_W   <=     W2_overflow_M;
                                
                             end if;
                         end process;
