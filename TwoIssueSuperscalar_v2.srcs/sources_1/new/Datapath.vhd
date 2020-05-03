@@ -1053,7 +1053,8 @@ W1_ALU_MAP              :   alu port map (
                                           ALUctrl            =>     CU1_ALUControl_E,
                                           output             =>     W1_ALUout_E,  
                                           zero               =>     open,
-                                          carryOut           =>     open       
+                                          carryOut           =>     open,
+                                          overflow           =>     overflow       
                                       );
                                       
 
@@ -1063,7 +1064,8 @@ W2_ALU_MAP              :   alu port map (
                                           ALUctrl            =>     CU2_ALUControl_E,
                                           output             =>     W2_ALUout_E,  
                                           zero               =>     open,
-                                          carryOut           =>     open       
+                                          carryOut           =>     open,
+                                          overflow           =>     overflow       
                                       );                                      
 
 
