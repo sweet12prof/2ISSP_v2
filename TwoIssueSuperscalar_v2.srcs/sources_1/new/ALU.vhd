@@ -31,7 +31,8 @@ entity ALU is
 		ALUctrl :  in STD_LOGIC_VECTOR(3 downto 0);
 		output  : out STD_LOGIC_VECTOR(31 downto 0);
 		zero : out std_logic;
-		carryOut: out STD_LOGIC
+		carryOut: out STD_LOGIC;
+		overflow : out std_logic
 		);
 end ALU;
 
@@ -81,7 +82,8 @@ port (
      Add32i1, Add32i2 : in std_logic_vector(31 downto 0);
 		Cin32 : in std_logic;
 		Add32Sum : out std_logic_vector(31 downto 0);
-		Cout32 : out std_logic
+		Cout32 : out std_logic;
+		OVERFLOW : out std_logic
 	 );
 end component;
 
@@ -156,10 +158,11 @@ end component;
 signal postNotgate1, postmux2, postadder, postandGate, postorGate, postxorGate, postsllGate, postsrlGate  : STD_LOGIC_VECTOR(31 downto 0);
 signal testNegative : std_logic_vector(31 downto 0);
 signal preOutput : std_logic_vector(31 downto 0);
+--SIgNAL  : std_logic;
 begin
 	notGate1 : notGate port map(ALUinput2, postNotgate1);
 	mux21 :  WSsP_2InputMux_32 generic map(32) port map(ALUinput2, postNotgate1, ALUctrl(3), postmux2);
-	adder1 :Adder32 port map(ALUinput1, postmux2, ALUctrl(3),postadder,carryOut);
+	adder1 :Adder32 port map(ALUinput1, postmux2, ALUctrl(3),postadder,carryOut, OVERFLOW);
 	testNegative <= "0000000000000000000000000000000" & postadder(31);
 	andGate1 : andGate port map(ALUinput1, postmux2,postandGate);
 	

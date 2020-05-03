@@ -6,7 +6,9 @@ entity Adder32 is
 		Add32i1, Add32i2 : in std_logic_vector(31 downto 0);
 		Cin32 : in std_logic;
 		Add32Sum : out std_logic_vector(31 downto 0);
-		Cout32 : out std_logic
+		Cout32 : out std_logic;
+		overflow : out std_logic
+		
 	);
 end Adder32;
 
@@ -16,12 +18,14 @@ architecture Behavioral of Adder32 is
 				Add8i1, Add8i2 : in std_logic_vector(7 downto 0);
 				Cin8 : in std_logic;
 				Cout8 : out std_logic;
-				Add8Sum : out std_logic_vector(7 downto 0)		
+				Add8Sum : out std_logic_vector(7 downto 0)	;
+				overflow : out std_logic
 			 );
 	end component  Adder8;
 	
 signal Cin8s :  std_logic_vector(3 downto 0);
 signal sum32 : std_logic_vector(31 downto 0);
+
 
 begin 
 		Adder8_1 : Adder8 port map(
@@ -29,7 +33,8 @@ begin
 		                              Add8i2 => Add32i2(7 downto 0), 
 		                              Cin8 => Cin32, 
 		                              Cout8 => Cin8s(0),
-		                              Add8Sum => sum32(7 downto 0)
+		                              Add8Sum => sum32(7 downto 0),
+		                              overflow => open
 		                           );
 		
 		Adder8_2 : Adder8 port map(  
@@ -37,7 +42,9 @@ begin
 		                              Add8i2 => Add32i2(15 downto 8), 
 		                              Cin8 => Cin8s(0), 
 		                              Cout8 => Cin8s(1),
-		                              Add8Sum => sum32(15 downto 8)
+		                              Add8Sum => sum32(15 downto 8),
+		                              overflow => open
+		                              
 		                           );
 		
 		Adder8_3 : Adder8 port map(
@@ -45,7 +52,9 @@ begin
 		                              Add8i2 =>Add32i2(23 downto 16), 
 		                              Cin8 => Cin8s(1), 
 		                              Cout8 => Cin8s(2),
-		                              Add8Sum => sum32(23 downto 16)
+		                              Add8Sum => sum32(23 downto 16),
+		                              overflow => open
+		                              
 		                           );
 		
 		Adder8_4 : Adder8 port map (
@@ -53,7 +62,8 @@ begin
 		                              Add8i2 => Add32i2(31 downto 24), 
 		                              Cin8 => Cin8s(2),   
 		                              Cout8 => Cin8s(3) ,  
-		                              Add8Sum => sum32(31 downto 24)
+		                              Add8Sum => sum32(31 downto 24),
+		                              overflow => overflow
 		                            );
 		Add32Sum <= sum32;
 		Cout32 <= Cin8s(3);
@@ -71,7 +81,8 @@ entity Adder8 is
 		Add8i1, Add8i2 : in std_logic_vector(7 downto 0);
 				Cin8 : in std_logic;
 				Cout8 : out std_logic;
-				Add8Sum : out std_logic_vector(7 downto 0)
+				Add8Sum : out std_logic_vector(7 downto 0);
+				overflow : out std_logic
 	);
 end Adder8;
 
@@ -161,6 +172,7 @@ begin
     
 	 Cout8 <= w_C(g_WIDTH);
 	 Add8Sum <= w_SUM; 
+	 overflow <= w_C(8) xor w_C(7);
 
 end Behavioral;
 

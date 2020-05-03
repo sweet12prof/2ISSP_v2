@@ -181,7 +181,8 @@ architecture Behavioral of Datapath is
                 Add32i2       : in std_logic_vector(31 downto 0);
                 Cin32         : in std_logic;
                 Add32Sum      : out std_logic_vector(31 downto 0);
-                Cout32        : out std_logic
+                Cout32        : out std_logic;
+                overflow : out std_logic
         );
     end component;
     
@@ -364,7 +365,8 @@ architecture Behavioral of Datapath is
                    ALUctrl              :  in STD_LOGIC_VECTOR(3 downto 0);
                    output               : out STD_LOGIC_VECTOR(31 downto 0);
                    zero                 : out std_logic;
-                   carryOut             : out STD_LOGIC
+                   carryOut             : out STD_LOGIC;
+                   overflow : out std_logic
                 );
          end component;
          
@@ -600,7 +602,7 @@ architecture Behavioral of Datapath is
      
      
      SIGNAL CU1_memtoReg_W                   : STD_LOGIC;
-     SIGNAL CU2_memtoReg_W                   : STD_LOGIC;
+     SIGNAL CU2_memtoReg_W, overflow                   : STD_LOGIC;
      
      
      
@@ -643,7 +645,8 @@ Pc_Adder             :   Adder32 port map (
                                                  Add32i2   => pcOut,
                                                  Cin32     => '0',
                                                  Add32Sum  => PC_plus4_8_F,
-                                                 Cout32    => open                                             
+                                                 Cout32    => open,
+                                                  overflow => open                                          
                                            );
                                                    
 
