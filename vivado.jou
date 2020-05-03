@@ -33,3 +33,110 @@ set_property source_mgmt_mode All [current_project]
 update_compile_order -fileset sources_1
 synth_design -rtl -name rtl_1
 close_design
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Datapath [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+synth_design -rtl -name rtl_1
+refresh_design
+close_design
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Top_MemoryInterface [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+synth_design -rtl -name rtl_1
+synth_design -rtl -name rtl_1
+synth_design -rtl -name rtl_1
+synth_design -rtl -name rtl_1
+close_design
+synth_design -rtl -name rtl_1
+launch_simulation
+source Adder8.tcl
+close_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Top_MemoryInterface [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+launch_simulation
+source Top_MemoryInterface.tcl
+current_wave_config {Untitled 2}
+add_wave {{/Top_MemoryInterface/DataMemory_Port_Map/MEM}} 
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all
+close_sim
+close_design
+launch_simulation
+source Top_MemoryInterface.tcl
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all
+relaunch_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Two_Issue_Scheduler [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+synth_design -rtl -name rtl_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Top_MemoryInterface [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+close_sim
+launch_simulation
+source Top_MemoryInterface.tcl
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Two_Issue_Scheduler [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+close_sim
+synth_design -rtl -name rtl_1
+refresh_design
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Top_MemoryInterface [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+refresh_design
+update_compile_order -fileset sources_1
+refresh_design
+close_design
+launch_simulation
+source Top_MemoryInterface.tcl
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all
+relaunch_sim
+current_wave_config {Untitled 5}
+add_wave {{/Top_MemoryInterface/DataMemory_Port_Map/MEM}} 
+current_wave_config {Untitled 5}
+add_wave {{/Top_MemoryInterface/Instruction_Memory_Port_Map}} 
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all
+relaunch_sim
+relaunch_sim
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all
+relaunch_sim
+relaunch_sim
+relaunch_sim
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all
+relaunch_sim
+add_force {/Top_MemoryInterface/clk} -radix hex {0 0ns} {1 10000ps} -repeat_every 20000ps
+add_force {/Top_MemoryInterface/reset} -radix hex {1 0ns} -cancel_after 22ns
+run all

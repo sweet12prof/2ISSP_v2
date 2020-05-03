@@ -49,7 +49,10 @@ entity SuperScalarProcessor is
             IMem_Instr1      : in std_logic_vector(31 downto 0);
             IMem_Instr2      : in std_logic_vector(31 downto 0);
             DP_W1_memWrite   : out std_logic;
-            DP_W2_memWrite   : out std_logic
+            DP_W2_memWrite   : out std_logic;
+            
+             DP_W1_unknownOp             : OUT std_logic;
+             DP_W2_unknownOp               : out std_logic
             
             
         );
@@ -76,6 +79,9 @@ architecture Behavioral of SuperScalarProcessor is
         
                               DP_W1_memWrite_M                : out std_logic;
                               DP_W2_memWrite_M                : out std_logic;
+                              
+                              DP_W1_unknownOp_W              : OUT std_logic;
+                              DP_W2_unknownOp_W               : out std_logic;
         
                               Dmem_readData1_M                : in std_logic_vector(31 downto 0);
                               Dmem_readData2_M                : in std_logic_vector(31 downto 0);
@@ -114,6 +120,9 @@ architecture Behavioral of SuperScalarProcessor is
                               CU2_ALUSrc_D                     : in std_logic;  
                               CU2_RegDst_D                     : in std_logic;  
                               CU2_lui_D                          : in std_logic;  
+                              
+                              CU1_unknownOp_D               : in std_logic;
+                              CU2_unknownOp_D               : in std_logic;  
                               --------------------------------
                               ---HU_Signals
                               --------------------------------
@@ -166,6 +175,7 @@ architecture Behavioral of SuperScalarProcessor is
         
                               HU_W2_ForwardAE                 : in std_logic_vector(2 downto 0);
                               HU_W2_ForwardBE                 : in std_logic_vector(2 downto 0)
+                              
         
                           );
       end component;
@@ -204,7 +214,10 @@ architecture Behavioral of SuperScalarProcessor is
             CU2_ALUControl_D            : out std_logic_vector(3 downto 0);     
             CU2_ALUSrc_D                : out std_logic;                        
             CU2_RegDst_D                : out std_logic;                        
-            CU2_lui_D                   : out std_logic                      
+            CU2_lui_D                   : out std_logic;
+            
+            CU1_unknownOp               : out std_logic;
+            CU2_unknownOp               : out std_logic                      
           );
         end component;
         
@@ -297,7 +310,9 @@ architecture Behavioral of SuperScalarProcessor is
             signal CU2_ALUControl_D            :     std_logic_vector(3 downto 0);   
             signal CU2_ALUSrc_D                :     std_logic;                      
             signal CU2_RegDst_D                :     std_logic;                      
-            signal CU2_lui_D                   :     std_logic;                       
+            signal CU2_lui_D                   :     std_logic;     
+            signal CU1_unknownOp               :  std_logic;
+            signal CU2_unknownOp               :  std_logic;                 
    
    
    -------------------------
@@ -377,6 +392,9 @@ Datapath_PORT_MAP :  Datapath port map (
                                                                                                    
                                                 DP_W1_memWrite_M              =>    DP_W1_memWrite  ,
                                                 DP_W2_memWrite_M              =>    DP_W2_memWrite ,
+                                                
+                                                DP_W1_unknownOp_W             =>    DP_W1_unknownOp,
+                                                DP_W2_unknownOp_W             =>    DP_W2_unknownOp,
                                                                                                    
                                                 Dmem_readData1_M              =>    Dmem_readData1 ,
                                                 Dmem_readData2_M              =>    Dmem_readData2 ,
@@ -466,7 +484,9 @@ Datapath_PORT_MAP :  Datapath port map (
                                                 HU_W1_ForwardBE               =>    HU_W1_ForwardBE    , 
                                                                                                        
                                                 HU_W2_ForwardAE               =>    HU_W2_ForwardAE    , 
-                                                HU_W2_ForwardBE               =>    HU_W2_ForwardBE    
+                                                HU_W2_ForwardBE               =>    HU_W2_ForwardBE    ,
+                                                CU1_unknownOp_D                   =>  CU1_unknownOp ,
+                                                CU2_unknownOp_D                  =>  CU2_unknownOp 
                                        ); 
 
 
@@ -558,7 +578,9 @@ ControlUnit_PORT_MAP        :      ControlUnit port map (
                                                                     CU2_ALUControl_D              =>    CU2_ALUControl_D    ,   
                                                                     CU2_ALUSrc_D                  =>    CU2_ALUSrc_D        ,   
                                                                     CU2_RegDst_D                  =>    CU2_RegDst_D        ,   
-                                                                    CU2_lui_D                     =>    CU2_lui_D           
+                                                                    CU2_lui_D                     =>    CU2_lui_D   ,
+                                                                     CU1_unknownOp                => CU1_unknownOp,
+                                                                     CU2_unknownOp                => CU2_unknownOp        
                                                             ); 
 
 

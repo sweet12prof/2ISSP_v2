@@ -69,7 +69,7 @@ begin
 			when "000010" => controls <= "000000000001000"; -- J
 			when "000011" => controls <= "000011000000000"; -- Jal
 			when "111111" => controls <= "000100000000000";
-			when others => controls <=   "1--------------"; -- illegal op 
+			when others => controls <=   "100000000000000"; -- illegal op 
 		end case;
 	end process;
  --	(regWrite, regDst, alusrc, branch, memWrite, memtoReg, jump, ALUOp(1 downto 0)) <= controls;

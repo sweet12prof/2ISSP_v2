@@ -43,7 +43,10 @@ entity Top_MemoryInterface is
             dataAdr2            : out std_logic_vector(31 downto 0);
             
             memWrite1           : out std_logic;
-            memWrite2           : out std_logic
+            memWrite2           : out std_logic;
+            
+            DP_W1_unknownOp             : OUT std_logic; 
+            DP_W2_unknownOp               : out std_logic
          );
 end Top_MemoryInterface;
 
@@ -68,8 +71,10 @@ architecture Behavioral of Top_MemoryInterface is
                     IMem_Instr2      : in std_logic_vector(31 downto 0);
                     
                     DP_W1_memWrite   : out std_logic;
-                    DP_W2_memWrite   : out std_logic
-                
+                    DP_W2_memWrite   : out std_logic; 
+                    
+                    DP_W1_unknownOp  : out std_logic;
+                    DP_W2_unknownOp  : out std_logic
                 
             );
       end component;
@@ -145,8 +150,10 @@ Processor_Port_MAP  :       SuperScalarProcessor port map (
                                                                 IMem_Instr2      =>     IMem_Instr2    ,
                                                                                                        
                                                                 DP_W1_memWrite   =>     DP_W1_memWrite ,
-                                                                DP_W2_memWrite   =>     DP_W2_memWrite 
+                                                                DP_W2_memWrite   =>     DP_W2_memWrite ,
                                                                 
+                                                                DP_W1_unknownOp  => DP_W1_unknownOp,
+                                                                DP_W2_unknownOp  => DP_W2_unknownOp
                                                                 
                                                           );
                                                           

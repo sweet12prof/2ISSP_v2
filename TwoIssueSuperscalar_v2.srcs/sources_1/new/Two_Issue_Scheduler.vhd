@@ -379,7 +379,7 @@ with opCode2 select
                 end if;     
             end process;
         
- finalOutputProcess :    process(opCode1,  Instr1_isImmediate_without_sw_lw, Instr1_isJrtype, Instr1_isJtype, rd1, rd2, rs2, rt2, ALUprocess_out, Immprocess_out,Branch_Jump_process_out,Swprocess_out, lwprocess_out, lui_process_out, Is_JR )
+ finalOutputProcess :    process(opCode1,  Instr1_isImmediate_without_sw_lw, Instr1_isJrtype, Instr1_isJtype, rd1, rd2, rs2, rt2, ALUprocess_out, Immprocess_out,Branch_Jump_process_out,Swprocess_out, lwprocess_out, lui_process_out, Is_JR, Instr1 )
         begin 
             if((opCode1 = Rtype and Is_JR = '0')) then 
                 finalOut <=  ALUprocess_out;
@@ -399,7 +399,7 @@ with opCode2 select
             elsif(opCode1 = lw ) then 
                 finalOut <= lwprocess_out;
             else 
-                finalOut <= (others => '0');
+                finalOut <= '1' & Instr1 & x"0000_0000";
             end if;
             
         end process;
