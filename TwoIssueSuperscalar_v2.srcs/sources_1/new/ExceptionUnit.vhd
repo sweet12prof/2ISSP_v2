@@ -48,6 +48,7 @@ entity ExceptionUnit is
             
             Cause_W1_Code   : out std_logic_vector(31 downto 0);
             Cause_W2_Code   : out std_logic_vector(31 downto 0)
+            
        );
 end ExceptionUnit;
 

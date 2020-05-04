@@ -40,7 +40,7 @@ entity Exception_Unit is
             CauseCode   : out std_logic_vector(31 downto 0);
             EPCWrite    : out std_logic;
             CauseWrite  : out std_logic;
-            PCBit           : out std_logic
+            PCBit       : out std_logic
             
         );
 end Exception_Unit;

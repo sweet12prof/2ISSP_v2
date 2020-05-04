@@ -36,7 +36,7 @@ entity MW_pipe_REG is
   Port ( 
             clk                 : in std_logic;
             reset               : in std_logic;
-            
+            FlushW              : in std_logic;
             CU_Signals_M        : in std_logic_vector(CU_signals_Width - 1 downto 0);
             W1_ALUout_M         : in std_logic_vector(31 downto 0);
             W1_ReadData_M       : in std_logic_vector(31 downto 0);
@@ -89,21 +89,36 @@ MW_pipe_REG_process : process(clk, reset)
                                 
                                 pcW             <= ( others => '0');
                              
-                             elsif(rising_edge(clk))    then 
-                                CU_Signals_W    <=     CU_Signals_M  ;
-                                W1_ALUout_W     <=     W1_ALUout_M   ;
-                                W1_ReadData_W   <=     W1_ReadData_M ;
-                                W1_writeReg_W   <=     W1_writeReg_M ;
-                                W1_overflow_W   <=     W1_overflow_M;
-                                
-                                           
-                                W2_ALUout_W     <=     W2_ALUout_M   ;
-                                W2_ReadData_W   <=     W2_ReadData_M ;
-                                W2_writeReg_W   <=     W2_writeReg_M ;
-                                W2_overflow_W   <=     W2_overflow_M;
-                                
-                                pcW             <= pcM;
-                               
+                             elsif(rising_edge(clk))    then
+                                if(FlushW = '1') then
+                                    CU_Signals_W    <= ( others => '0');
+                                    W1_ALUout_W     <= ( others => '0');
+                                    W1_ReadData_W   <= ( others => '0');
+                                    W1_writeReg_W   <= ( others => '0');
+                                    W1_overflow_W  <= '0';
+                                    
+                                                    
+                                    W2_ALUout_W     <= ( others => '0');
+                                    W2_ReadData_W   <= ( others => '0');
+                                    W2_writeReg_W   <= ( others => '0');
+                                    W2_overflow_W  <= '0';
+                                    
+                                    pcW             <= ( others => '0');
+                                else 
+                                    CU_Signals_W    <=     CU_Signals_M  ;
+                                    W1_ALUout_W     <=     W1_ALUout_M   ;
+                                    W1_ReadData_W   <=     W1_ReadData_M ;
+                                    W1_writeReg_W   <=     W1_writeReg_M ;
+                                    W1_overflow_W   <=     W1_overflow_M;
+                                    
+                                               
+                                    W2_ALUout_W     <=     W2_ALUout_M   ;
+                                    W2_ReadData_W   <=     W2_ReadData_M ;
+                                    W2_writeReg_W   <=     W2_writeReg_M ;
+                                    W2_overflow_W   <=     W2_overflow_M;
+                                    
+                                    pcW             <= pcM;
+                                end if;
                             end if;
                         end process;
 

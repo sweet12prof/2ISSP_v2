@@ -399,6 +399,7 @@ architecture Behavioral of Datapath is
               Port ( 
                        clk                  : in std_logic;
                        reset                : in std_logic;
+                       FlushM               : in std_logic;
                        
                        CU_Signals_E         : in std_logic_vector(cu_EM_signalsWidth - 1 downto 0);
                        PC_Plus4_8_E         : in std_logic_vector(31 downto 0); 
@@ -437,6 +438,7 @@ architecture Behavioral of Datapath is
               Port ( 
                         clk                 : in std_logic;
                         reset               : in std_logic;
+                        FlushW              : IN std_logic;
                         
                         CU_Signals_M        : in std_logic_vector(CU_signals_Width - 1 downto 0);
                         W1_ALUout_M         : in std_logic_vector(31 downto 0);
@@ -543,6 +545,8 @@ architecture Behavioral of Datapath is
      signal     CU_ControlSigs_D            : STD_logic_vector(25 downto 0);
      signal     CU1_ControlSigs_D            : STD_logic_vector(13 downto 0);
      signal     CU2_ControlSigs_D            : STD_logic_vector(11 downto 0);
+     
+     signal Flush_DE_pipe_REG               : STD_logic;
      
      
      ---------------------------------------------------------------------
@@ -770,7 +774,7 @@ FlushFD_pipe_REGFprocess : process(HU_stallD, CU1_pcSrc_D)
                                     if (HU_stallD = '1') then 
                                             Flush_FD_pipe_REG <= '0';
                                     else
-                                            Flush_FD_pipe_REG <= CU1_pcSrc_D(3) or CU1_pcSrc_D(2) or CU1_pcSrc_D(1) or CU1_pcSrc_D(0);
+                                            Flush_FD_pipe_REG <= CU1_pcSrc_D(3) or CU1_pcSrc_D(2) or CU1_pcSrc_D(1) or CU1_pcSrc_D(0) or PCBit;
                                     end if;
                                 end process;
 
@@ -948,14 +952,14 @@ CU1_ControlSigs_D  <=       CU1_MFc0_D         &
   CU_ControlSigs_D  <=    CU1_ControlSigs_D  &  CU2_ControlSigs_D;
   
   
-
+Flush_DE_pipe_REG <= HU_FlushE or PcBit;
 
 
 DE_pipe_REG_MAP :  DE_pipe_REG generic map (26)
                                port map (
                                          clk               =>    clk,     
                                          reset             =>    reset,     
-                                         FlushE            =>    HU_FlushE,      
+                                         FlushE            =>    Flush_DE_pipe_REG,      
                                                               
                                          CU_SignalsD       =>    CU_ControlSigs_D,
                                          W1_RD1_D          =>    W1_RD1_D,
@@ -1204,7 +1208,8 @@ EM_pipe_REG_MAP     : EM_pipe_REG   generic map(12)
                                     port map (
                                                 clk              =>     clk,
                                                 reset            =>     reset,
-                                                                     
+                                                FlushM           =>     PcBit,
+                                                                    
                                                 CU_Signals_E     =>     CU_ControlSigs_E_M,
                                                 PC_Plus4_8_E     =>     PCplus4_8E,
                                                 W1_ALUout_E      =>     W1_ALUout_E,
@@ -1319,6 +1324,8 @@ CU_ControlSigs_M_W <= CU1_ControlSigs_M_W & CU2_ControlSigs_M_W;
                                   port MAP (
                                                 clk                 =>  clk,       
                                                 reset               =>  reset,
+                                                FlushW              =>  PCBit,
+                                                
                                                                 
                                                 CU_Signals_M        =>  CU_ControlSigs_M_W,
                                                 W1_ALUout_M         =>  W1_ALUoutMres,
