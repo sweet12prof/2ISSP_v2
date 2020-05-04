@@ -80,8 +80,11 @@ architecture Behavioral of SuperScalarProcessor is
                               DP_W1_memWrite_M                : out std_logic;
                               DP_W2_memWrite_M                : out std_logic;
                               
-                              DP_W1_unknownOp_W              : OUT std_logic;
+                              DP_W1_unknownOp_W               : OUT std_logic;
                               DP_W2_unknownOp_W               : out std_logic;
+                              
+                              DP_W1_overflow                    : OUT std_logic;
+                              DP_W2_overflow                    : out std_logic;
         
                               Dmem_readData1_M                : in std_logic_vector(31 downto 0);
                               Dmem_readData2_M                : in std_logic_vector(31 downto 0);
@@ -174,7 +177,18 @@ architecture Behavioral of SuperScalarProcessor is
                               HU_W1_ForwardBE                 : in std_logic_vector(2 downto 0);
         
                               HU_W2_ForwardAE                 : in std_logic_vector(2 downto 0);
-                              HU_W2_ForwardBE                 : in std_logic_vector(2 downto 0)
+                              HU_W2_ForwardBE                 : in std_logic_vector(2 downto 0);
+                              
+                              ----------------------------------------------------------
+                                -- Exception Unit
+                                -----------------------------------------------------------------------
+                              CauseCode   : in std_logic_vector(31 downto 0);
+                              EPCWrite    : in std_logic;
+                              CauseWrite  : in std_logic;
+                              PCBit       : in std_logic;
+                              
+                              CU1_MFc0_D                      : in STD_LOGIC;
+                              CU2_MFc0_D                      : in std_logic
                               
         
                           );
@@ -217,7 +231,10 @@ architecture Behavioral of SuperScalarProcessor is
             CU2_lui_D                   : out std_logic;
             
             CU1_unknownOp               : out std_logic;
-            CU2_unknownOp               : out std_logic                      
+            CU2_unknownOp               : out std_logic ;
+            
+            CU1_MFc0_D                      : out STD_LOGIC;
+            CU2_MFc0_D                      : out std_logic                    
           );
         end component;
         
@@ -261,8 +278,8 @@ architecture Behavioral of SuperScalarProcessor is
                                                                                    
                 HU_StallF                       : out std_logic;                    
                 HU_StallD                       : out std_logic;                    
-                HU_FlushE                       : out std_logic;                    
-                                                                                 
+                HU_FlushE                       : out std_logic;                       
+                                                                                                         
                 HU_W1_ForwardAD                 : out std_logic_vector(1 downto 0); 
                 HU_W1_ForwardBD                 : out std_logic_vector(1 downto 0); 
                 HU_W1_ForwardCD                 : out std_logic_vector(1 downto 0); 
@@ -273,6 +290,19 @@ architecture Behavioral of SuperScalarProcessor is
                 HU_W2_ForwardAE                 : out std_logic_vector(2 downto 0); 
                 HU_W2_ForwardBE                 : out std_logic_vector(2 downto 0)          
         );
+            end component;
+            
+            component Exception_Unit is
+              Port ( 
+                        overflow1   : in std_logic; 
+                        overflow2   : in std_logic;
+                        unknownOp   : in std_logic;
+                        
+                        CauseCode   : out std_logic_vector(31 downto 0);
+                        EPCWrite    : out std_logic;
+                        CauseWrite  : out std_logic;
+                        PCBit       : out std_logic
+                    );
             end component;
             
             
@@ -312,8 +342,10 @@ architecture Behavioral of SuperScalarProcessor is
             signal CU2_RegDst_D                :     std_logic;                      
             signal CU2_lui_D                   :     std_logic;     
             signal CU1_unknownOp               :  std_logic;
-            signal CU2_unknownOp               :  std_logic;                 
-   
+            signal CU2_unknownOp               :  std_logic;    
+            
+            signal CU1_MFc0_D                      :  STD_LOGIC;              
+            signal CU2_MFc0_D                      :  std_logic; 
    
    -------------------------
    ---HU Signals
@@ -368,8 +400,19 @@ architecture Behavioral of SuperScalarProcessor is
             signal     HU_W2_ForwardAE                 :  std_logic_vector(2 downto 0);       
             signal     HU_W2_ForwardBE                 :  std_logic_vector(2 downto 0);        
    
-
-   
+            
+            
+            signal DP_W1_overflow, DP_W1_unknownOpSi          :  std_logic;
+            signal DP_W2_overflow          :  std_logic;
+            
+             signal CauseCode              : std_logic_vector(31 downto 0);
+             signal EPCWrite               : std_logic;
+             signal CauseWrite             : std_logic;
+             signal PCBit                  : std_logic;
+            
+            
+            
+            
 begin
             
             
@@ -393,7 +436,7 @@ Datapath_PORT_MAP :  Datapath port map (
                                                 DP_W1_memWrite_M              =>    DP_W1_memWrite  ,
                                                 DP_W2_memWrite_M              =>    DP_W2_memWrite ,
                                                 
-                                                DP_W1_unknownOp_W             =>    DP_W1_unknownOp,
+                                                DP_W1_unknownOp_W             =>    DP_W1_unknownOpSi,
                                                 DP_W2_unknownOp_W             =>    DP_W2_unknownOp,
                                                                                                    
                                                 Dmem_readData1_M              =>    Dmem_readData1 ,
@@ -433,6 +476,10 @@ Datapath_PORT_MAP :  Datapath port map (
                                                 CU2_ALUSrc_D                  =>    CU2_ALUSrc_D        ,
                                                 CU2_RegDst_D                  =>    CU2_RegDst_D        ,
                                                 CU2_lui_D                     =>    CU2_lui_D           ,
+                                                
+                                                CU1_MFc0_D                    =>    CU1_MFc0_D,
+                                                CU2_MFc0_D                    =>    CU2_MFc0_D,
+                                                
                                                 ---------------------------   =>
                                                 ---HU_Signals                 =>
                                                 ---------------------------   =>
@@ -486,7 +533,16 @@ Datapath_PORT_MAP :  Datapath port map (
                                                 HU_W2_ForwardAE               =>    HU_W2_ForwardAE    , 
                                                 HU_W2_ForwardBE               =>    HU_W2_ForwardBE    ,
                                                 CU1_unknownOp_D                   =>  CU1_unknownOp ,
-                                                CU2_unknownOp_D                  =>  CU2_unknownOp 
+                                                CU2_unknownOp_D                  =>  CU2_unknownOp ,
+                                                
+                                                DP_W1_overflow              =>   DP_W1_overflow,
+                                                DP_W2_overflow              =>   DP_W2_overflow,
+                                                
+                                                CauseCode    =>    CauseCode ,
+                                                EPCWrite     =>    EPCWrite  ,
+                                                CauseWrite   =>    CauseWrite,
+                                                PCBit        =>    PCBit               
+                                                
                                        ); 
 
 
@@ -580,32 +636,23 @@ ControlUnit_PORT_MAP        :      ControlUnit port map (
                                                                     CU2_RegDst_D                  =>    CU2_RegDst_D        ,   
                                                                     CU2_lui_D                     =>    CU2_lui_D   ,
                                                                      CU1_unknownOp                => CU1_unknownOp,
-                                                                     CU2_unknownOp                => CU2_unknownOp        
+                                                                     CU2_unknownOp                => CU2_unknownOp,
+                                                                     CU1_MFc0_D                   => CU1_MFc0_D,
+                                                                     CU2_MFc0_D                   => CU2_MFc0_D
                                                             ); 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                            
+                                                            
+                                                            
+    ExceptionUnit_Map :   Exception_Unit Port map ( 
+                                                    overflow1    =>    DP_W1_overflow,               
+                                                    overflow2    =>    DP_W2_overflow,               
+                                                    unknownOp    =>    DP_W1_unknownOpSi,               
+                                                    --             =>                   
+                                                    CauseCode    =>    CauseCode , 
+                                                    EPCWrite     =>    EPCWrite  ,               
+                                                    CauseWrite   =>    CauseWrite,               
+                                                    PCBit        =>    PCBit     
+                    );
+                DP_W1_unknownOp <= DP_W1_unknownOpSi;
 
 end Behavioral;

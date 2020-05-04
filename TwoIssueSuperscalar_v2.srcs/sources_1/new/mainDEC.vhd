@@ -46,33 +46,37 @@ entity mainDEC is
                 jal          : out std_logic;
                 lui          : out std_logic;
                 haltCPU      : out std_logic;
-                unknownOp    : out std_logic
+                unknownOp    : out std_logic;
+                MFc0         : out std_logic 
       );
 end mainDEC;
 
 architecture synth of mainDEC is 
-	signal controls: STD_LOGIC_VECTOR(14 downto 0);
+	signal controls: STD_LOGIC_VECTOR(15 downto 0);
 begin 
 	process(op) begin
 		case op is 
-			when "000000" => controls <= "000001100000010"; -- RTYPE
-			when "100011" => controls <= "000001010010000"; -- LW
-			when "001111" => controls <= "010001000000000"; --lui
-			when "101011" => controls <= "000000010100000"; -- SW
-			when "000100" => controls <= "000000001000001"; -- BEQ
-			when "000101" => controls <= "001000000000001"; --BNE
-			when "001000" => controls <= "000001010000000"; -- ADDI
-			when "001100" => controls <= "000001010000011"; --andi
-			when "001101" => controls <= "000001010000100"; --ori
-			when "001010" => controls <= "000001010000101"; --slti
-			when "001110" => controls <= "000001010000110"; --xori
-			when "000010" => controls <= "000000000001000"; -- J
-			when "000011" => controls <= "000011000000000"; -- Jal
-			when "111111" => controls <= "000100000000000";
-			when others => controls <=   "100000000000000"; -- illegal op 
+			when "000000" => controls <= "0000001100000010"; -- RTYPE
+			when "100011" => controls <= "0000001010010000"; -- LW
+			when "001111" => controls <= "0010001000000000"; --lui
+			when "101011" => controls <= "0000000010100000"; -- SW
+			when "000100" => controls <= "0000000001000001"; -- BEQ
+			when "000101" => controls <= "0001000000000001"; --BNE
+			when "001000" => controls <= "0000001010000000"; -- ADDI
+			when "001100" => controls <= "0000001010000011"; --andi
+			when "001101" => controls <= "0000001010000100"; --ori
+			when "001010" => controls <= "0000001010000101"; --slti
+			when "001110" => controls <= "0000001010000110"; --xori
+			when "000010" => controls <= "0000000000001000"; -- J
+			when "000011" => controls <= "0000011000000000"; -- Jal
+			when "010000" => controls <= "1000001000000000"; --Mfc0
+			when "111111" => controls <= "0000100000000000"; ---haltCPU
+			
+			when others => controls <=   "0100000000000000"; -- illegal op 
 		end case;
 	end process;
  --	(regWrite, regDst, alusrc, branch, memWrite, memtoReg, jump, ALUOp(1 downto 0)) <= controls;
+ MFc0      <= controls(15);
  unknownOp <= controls(14);
  lui <= controls(13);
  bne <= controls(12);

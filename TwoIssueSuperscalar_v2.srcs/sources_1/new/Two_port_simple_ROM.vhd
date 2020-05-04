@@ -509,7 +509,9 @@ architecture Behavioral of Two_port_simple_ROM is
 --x"23bd0018",
 --x"03e00008",
 --x"f0ffffff",
+
 x"20080000",
+x"f0ffffff",
 x"21040000",
 x"20050000",
 x"20060007",

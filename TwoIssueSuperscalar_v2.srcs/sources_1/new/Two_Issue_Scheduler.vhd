@@ -176,6 +176,13 @@ with opCode1 select
                else 
                 ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
                end if;
+               
+            elsif (opCode2 = mfc0) then 
+                if(rd1 /= rt2) then 
+                    ALUprocess_out <= '0' & Instr1 & Instr2;
+                else
+                    ALUprocess_out <= '1' & Instr1 & x"0000_0000" ;
+                end if;
             else 
                 ALUprocess_out <= '1' & Instr1 & x"0000_0000";
             end if;
@@ -228,6 +235,13 @@ with opCode2 select
                     Immprocess_out <= '0' & Instr2 & Instr1;  
                 else 
                     Immprocess_out <= '1' & Instr1 & x"0000_0000";  
+                end if;
+            
+            elsif(opCode2 = mfc0) then 
+                if (rt1 /= rt2) then 
+                    Immprocess_out <= '0' & Instr1 & Instr2;
+                else 
+                    Immprocess_out <= '1' & Instr1 & x"0000_0000";
                 end if;
             
             else 
@@ -283,6 +297,14 @@ with opCode2 select
                     
                 elsif((opCode2 = sw or opCode2 = lw) ) then
                     Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                
+                elsif(opCode2 = mfc0) then  
+                    if (rs1 /= rt2) then 
+                        Swprocess_out <= '0' & Instr1 & Instr2;
+                    else 
+                        Swprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
+                    
                 else 
                     Swprocess_out <= '1' & Instr1 & x"0000_0000";
                 end if; 
@@ -328,6 +350,14 @@ with opCode2 select
                   else
                         lui_process_out <= '1' & Instr1 & x"0000_0000";
                   end if;
+               
+                elsif(opCode2 = mfc0) then 
+                  if(( rt1 /= rt2)) then 
+                        lui_process_out <= '0' & Instr1 & Instr2;
+                  else
+                        lui_process_out <= '1' & Instr1 & x"0000_0000";
+                  end if;
+                  
                else 
                     lui_process_out <= '1' & Instr1 & x"0000_0000";
                 end if;
@@ -376,13 +406,21 @@ with opCode2 select
                     
                 elsif((opCode2 = sw or opCode2 = lw) ) then
                     lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                    
+                elsif(opCode2 = mfc0) then 
+                    if(rt1 /= rt2) then 
+                        lwprocess_out <= '0' & Instr1 & Instr2;
+                    else 
+                        lwprocess_out <= '1' & Instr1 & x"0000_0000";
+                    end if;
+                    
                 else 
                     lwprocess_out <= '1' & Instr1 & x"0000_0000";
                 end if;     
             end process;
         
         
-        mfc0_as_Instr1 : process(opCode2, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype, rt1, rs1,rd2, rs2, rt2, Instr1, Instr2)
+        mfc0_as_Instr1 : process(opCode2, Instr2_isImmediate, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype, rt1, rs1,rd2, rs2, rt2, Instr1, Instr2)
                     begin 
                         if(opCode2 = RType) then
                      if((rt1 /= rs2) and (rt1 /= rt2) and (rt1 /= rd2)) then 
@@ -421,6 +459,14 @@ with opCode2 select
                   else
                      mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
                   end if;
+                  
+                elsif(opCode2 = mfc0) then 
+                  if(( rt1 /= rt2)) then 
+                     mfc0_process_Out <= '0' & Instr1 & Instr2;
+                  else
+                     mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                  end if;
+                  
                else 
                      mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
                 end if;

@@ -53,7 +53,8 @@ entity generic_Control is
                 CU_pcSrc_D                      : out std_logic_vector(3 downto 0);  
                 CU_Equal_D                      : in STD_LOGIC;  
                 
-                CU_unknownOp               : out std_logic
+                CU_unknownOp               : out std_logic;
+                CU_MFc0_D                  : out std_logic
                                  
       );
 end generic_Control;
@@ -74,7 +75,8 @@ architecture Behavioral of generic_Control is
                 jal          : out std_logic;
                 lui          : out std_logic;
                 haltCPU      : out std_logic;
-                unknownOp    : out std_logic
+                unknownOp    : out std_logic;
+                MFc0         : out std_logic         
    		   );
    	end component;
    	
@@ -106,7 +108,8 @@ begin
                                  jal      =>  jalSig,     
                                  lui      =>  CU_lui_D,                 
                                  haltCPU  =>  haltCPUsig,
-                                 unknownOp => CU_unknownOp                 
+                                 unknownOp => CU_unknownOp,
+                                 MFc0       => CU_MFc0_D                
                               );                                            
                                                                             
         ad: aluDEC port map(                                                

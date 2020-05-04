@@ -87,6 +87,7 @@ entity Datapath is
             CU1_pcSrc_D                       : in std_logic_vector(3 downto 0);
             CU1_Equal_D                      : out STD_LOGIC;
             CU1_MFc0_D                      : in STD_LOGIC;
+            CU2_MFc0_D                      : in std_logic;
             
             
             CU2_ShamtSel_D                   : in std_logic;      
@@ -542,9 +543,9 @@ architecture Behavioral of Datapath is
      signal     compIn1                     : std_logic_vector(31 downto 0);
      signal     compIn2                     : std_logic_vector(31 downto 0);
      
-     signal     CU_ControlSigs_D            : STD_logic_vector(25 downto 0);
+     signal     CU_ControlSigs_D            : STD_logic_vector(26 downto 0);
      signal     CU1_ControlSigs_D            : STD_logic_vector(13 downto 0);
-     signal     CU2_ControlSigs_D            : STD_logic_vector(11 downto 0);
+     signal     CU2_ControlSigs_D            : STD_logic_vector(12 downto 0);
      
      signal Flush_DE_pipe_REG               : STD_logic;
      
@@ -552,9 +553,9 @@ architecture Behavioral of Datapath is
      ---------------------------------------------------------------------
      --Execute Stage Signals
      ---------------------------------------------------------------------
-     signal     CU_ControlSigs_E            : STD_logic_vector(25 downto 0);
+     signal     CU_ControlSigs_E            : STD_logic_vector(26 downto 0);
      signal     CU1_ControlSigs_E            : STD_logic_vector(13 downto 0);
-     signal     CU2_ControlSigs_E            : STD_logic_vector(11 downto 0);
+     signal     CU2_ControlSigs_E            : STD_logic_vector(12 downto 0);
                 
      signal    CU1_ShamtSel_E                :  std_logic;                    
      signal    CU1_regWrite_E                :  std_logic;                    
@@ -607,9 +608,9 @@ architecture Behavioral of Datapath is
      signal     W1_ALUout_E                    : STD_LOGIC_VECTOR(31 downto 0); 
      signal     W2_ALUout_E                    : STD_LOGIC_VECTOR(31 downto 0); 
      
-     signal     CU_ControlSigs_E_M             : std_logic_vector(11 downto 0);
+     signal     CU_ControlSigs_E_M             : std_logic_vector(12 downto 0);
      signal     CU1_ControlSigs_E_M            : STD_logic_vector(6 downto 0);
-     signal     CU2_ControlSigs_E_M            : STD_logic_vector(4 downto 0);
+     signal     CU2_ControlSigs_E_M            : STD_logic_vector(5 downto 0);
      
      SIGNAL     W1_writeData_E                 : STD_LOGIC_vector(31 downto 0);
      SIGNAL     W2_writeData_E                 : STD_LOGIC_vector(31 downto 0);
@@ -619,14 +620,14 @@ architecture Behavioral of Datapath is
      ---------------------------------------------------------------------
      
      signal CU1_ControlSigs_M               : STD_logic_vector(6 downto 0);
-     signal CU2_ControlSigs_M               : STD_logic_vector(4 downto 0);
+     signal CU2_ControlSigs_M               : STD_logic_vector(5 downto 0);
      
      signal     W1_preSrcAE_MUX             : std_logic_vector(31 downto 0); 
      signal     W1_preSrcBE_MUX             : std_logic_vector(31 downto 0); 
      signal     W2_preSrcAE_MUX             : std_logic_vector(31 downto 0); 
      signal     W2_preSrcBE_MUX             : std_logic_vector(31 downto 0); 
  
-     signal     CU_Signals_M                : std_logic_vector(11 downto 0);
+     signal     CU_Signals_M                : std_logic_vector(12 downto 0);
      signal     PC_Plus4_8_M                : std_logic_vector(31 downto 0);
      signal     W1_ALUout_M                 : std_logic_vector(31 downto 0);
      signal     W1_writeData_M              : std_logic_vector(31 downto 0);
@@ -659,9 +660,9 @@ architecture Behavioral of Datapath is
      signal     W1_ALUoutMres               : std_logic_vector(31 downto 0);
      signal     W2_ALUoutMres               : std_logic_vector(31 downto 0);
      
-     signal     CU_ControlSigs_M_W          : std_logic_vector(6 downto 0);
+     signal     CU_ControlSigs_M_W          : std_logic_vector(7 downto 0);
      signal     CU1_ControlSigs_M_W         : std_logic_vector(3 downto 0);
-     signal     CU2_ControlSigs_M_W         : std_logic_vector(2 downto 0);  
+     signal     CU2_ControlSigs_M_W         : std_logic_vector(3 downto 0);  
      
      signal     CU1_regWrite_W           : std_logic;
      signal     CU2_regWrite_W           : std_logic;
@@ -670,7 +671,7 @@ architecture Behavioral of Datapath is
      signal     W1_Result_W              :   std_logic_vector(31 downto 0); 
      signal     W2_Result_W              :   std_logic_vector(31 downto 0); 
         
-     signal CU_Signals_W                    : std_logic_vector(6 downto 0);
+     signal CU_Signals_W                    : std_logic_vector(7 downto 0);
      signal W1_ALUout_W                     : std_logic_vector(31 downto 0);
      signal W1_ReadData_W                   : std_logic_vector(31 downto 0);
      
@@ -681,7 +682,7 @@ architecture Behavioral of Datapath is
      
      
      signal CU1_ControlSigs_W               : std_logic_vector(3 downto 0);
-     signal CU2_ControlSigs_W               : std_logic_vector(2 downto 0);
+     signal CU2_ControlSigs_W               : std_logic_vector(3 downto 0);
      
      
      SIGNAL CU1_memtoReg_W                   : STD_LOGIC;
@@ -701,12 +702,20 @@ architecture Behavioral of Datapath is
      signal     PCE            : std_logic_vector(31 downto 0);
      signal     PCm            : std_logic_vector(31 downto 0);
      signal     PCW            : std_logic_vector(31 downto 0);
+     
      signal CO_WriteData       : std_logic_vector(31 downto 0);
+     signal CO_WriteData2       : std_logic_vector(31 downto 0);
+     
      signal W1_result_MuxMap2_SelectSig    : std_logic_vector(1 downto 0);
+     signal W2_result_MuxMap2_SelectSig    : std_logic_vector(1 downto 0);
      
       signal CU1_MFc0_W                  :  std_logic;
       signal CU1_MFc0_M                  :  std_logic;
       signal CU1_MFc0_E                  :  std_logic;
+      
+      signal CU2_MFc0_W                  :  std_logic;
+      signal CU2_MFc0_M                  :  std_logic;
+      signal CU2_MFc0_E                  :  std_logic;
       
       signal PCmuxSEL                    :  std_logic_vector(4 downto 0);
       
@@ -936,8 +945,10 @@ CU1_ControlSigs_D  <=       CU1_MFc0_D         &
                             CU1_lui_D        &
                             CU1_Jal_D        ;
                             
- 
- CU2_ControlSigs_D  <=      CU2_unknownOp_D    &
+                            
+                            
+ CU2_ControlSigs_D  <=      CU2_MFc0_D         &
+                            CU2_unknownOp_D    &
                             CU2_ShamtSel_D     &
                             CU2_regWrite_D     &
                             CU2_memtoReg_D     &
@@ -955,7 +966,7 @@ CU1_ControlSigs_D  <=       CU1_MFc0_D         &
 Flush_DE_pipe_REG <= HU_FlushE or PcBit;
 
 
-DE_pipe_REG_MAP :  DE_pipe_REG generic map (26)
+DE_pipe_REG_MAP :  DE_pipe_REG generic map (27)
                                port map (
                                          clk               =>    clk,     
                                          reset             =>    reset,     
@@ -1005,8 +1016,8 @@ DE_pipe_REG_MAP :  DE_pipe_REG generic map (26)
  --------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------Execute STAGE LOGIC AND MAPS------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------
- CU1_ControlSigs_E <=   CU_ControlSigs_E(25 downto 12);
- CU2_ControlSigs_E <=   CU_ControlSigs_E( 11 downto 0);
+ CU1_ControlSigs_E <=   CU_ControlSigs_E(26 downto 13);
+ CU2_ControlSigs_E <=   CU_ControlSigs_E( 12 downto 0);
  
  CU1_MFc0_E         <= CU1_ControlSigs_E(13);
  CU1_unknownOp_E    <= CU1_ControlSigs_E(12);
@@ -1019,8 +1030,9 @@ DE_pipe_REG_MAP :  DE_pipe_REG generic map (26)
  CU1_RegDst_E       <= CU1_ControlSigs_E(2);
  CU1_lui_E          <= CU1_ControlSigs_E(1);
  CU1_Jal_E          <= CU1_ControlSigs_E(0);
-
-    CU2_unknownOp_E   <= CU2_ControlSigs_E(11);
+    
+    CU2_MFc0_E           <= CU2_ControlSigs_E(12);
+    CU2_unknownOp_E      <= CU2_ControlSigs_E(11);
     CU2_ShamtSel_E       <= CU2_ControlSigs_E(10);           
     CU2_regWrite_E       <= CU2_ControlSigs_E(9);           
     CU2_memtoReg_E       <= CU2_ControlSigs_E(8);           
@@ -1193,7 +1205,8 @@ CU1_ControlSigs_E_M <=      CU1_MFc0_E       & ----7  ---11
                             CU1_Jal_E        ;-----1  --5
 
 
-CU2_ControlSigs_E_M     <=  CU2_unknownOp_E    &    -----5   4
+CU2_ControlSigs_E_M     <=  CU2_MFc0_E         &
+                            CU2_unknownOp_E    &    -----5   4
                             CU2_regWrite_E     &    ----4  ---3
                             CU2_memtoReg_E     &    ---3  ---2
                             CU2_memWrite_E     &    ---2   --1
@@ -1204,7 +1217,7 @@ CU_ControlSigs_E_M <= CU1_ControlSigs_E_M & CU2_ControlSigs_E_M;
 W1_writeData_E      <=      W1_preSrcBE_MUX;
 W2_writeData_E      <=      W2_preSrcBE_MUX;
 
-EM_pipe_REG_MAP     : EM_pipe_REG   generic map(12)
+EM_pipe_REG_MAP     : EM_pipe_REG   generic map(13)
                                     port map (
                                                 clk              =>     clk,
                                                 reset            =>     reset,
@@ -1257,8 +1270,8 @@ DP_W2_writeData_M  <= W2_writeData_M;
 DP_W1_memWrite_M <= CU1_memWrite_M;
 DP_W2_memWrite_M <= CU2_memWrite_M;                            
                                               
-CU1_ControlSigs_M <= CU_Signals_M(11 downto 5);
-CU2_ControlSigs_M <= CU_Signals_M(4 downto 0);
+CU1_ControlSigs_M <= CU_Signals_M(12 downto 6);
+CU2_ControlSigs_M <= CU_Signals_M(5 downto 0);
 
 CU1_MFc0_M          <=      CU1_ControlSigs_M(6) ;
 CU1_unknownOp_M     <=      CU1_ControlSigs_M(5) ;
@@ -1268,6 +1281,7 @@ CU1_memWrite_M       <=     CU1_ControlSigs_M(2) ;
 CU1_lui_M            <=     CU1_ControlSigs_M(1) ;
 CU1_Jal_M            <=     CU1_ControlSigs_M(0) ;
 
+CU2_MFc0_M          <=    CU2_ControlSigs_M(5) ;
 CU2_unknownOp_M     <=    CU2_ControlSigs_M(4) ;
 CU2_regWrite_M     <=     CU2_ControlSigs_M(3) ;--&    ----4  ---3
 CU2_memtoReg_M     <=     CU2_ControlSigs_M(2) ;--&    ---3  ---2 
@@ -1311,7 +1325,7 @@ CU1_ControlSigs_M_W <=      CU1_MFc0_M       &
                             CU1_regWrite_M   &  ---3  --1
                             CU1_memtoReg_M   ;  ---2  --0
 
-CU2_ControlSigs_M_W     <=  
+CU2_ControlSigs_M_W     <=  CU2_MFc0_M         &
                             CU2_unknownOp_M    &
                             CU2_regWrite_M     &    ----1  ---1
                             CU2_memtoReg_M     ;   ---0  ---0
@@ -1320,7 +1334,7 @@ CU2_ControlSigs_M_W     <=
 CU_ControlSigs_M_W <= CU1_ControlSigs_M_W & CU2_ControlSigs_M_W;
 
 
- MW_pipe_REG_MAP                : MW_pipe_REG generic map(7)  
+ MW_pipe_REG_MAP                : MW_pipe_REG generic map(8)  
                                   port MAP (
                                                 clk                 =>  clk,       
                                                 reset               =>  reset,
@@ -1359,14 +1373,15 @@ CU_ControlSigs_M_W <= CU1_ControlSigs_M_W & CU2_ControlSigs_M_W;
 -------------------------------------------WriteBack STAGE LOGIC AND MAPS-------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------   
 
-CU1_ControlSigs_W <= CU_Signals_W(6 downto 3);
-CU2_ControlSigs_W <= CU_Signals_W(2 downto 0);
+CU1_ControlSigs_W <= CU_Signals_W(7 downto 4);
+CU2_ControlSigs_W <= CU_Signals_W(3 downto 0);
 
 CU1_MFc0_W        <=  CU1_ControlSigs_W(3);
 CU1_unknownOp_W   <=  CU1_ControlSigs_W(2);
 CU1_regWrite_W  <=  CU1_ControlSigs_W(1);
 CU1_memtoReg_W  <=  CU1_ControlSigs_W(0);
 
+CU2_MFc0_W        <=  CU2_ControlSigs_W(3); 
 CU2_unknownOp_W   <=  CU2_ControlSigs_W(2);               
 CU2_regWrite_W  <=    CU2_ControlSigs_W(1);                                        
 CU2_memtoReg_W  <=    CU2_ControlSigs_W(0);
@@ -1378,6 +1393,7 @@ HU_W2_regWrite_W    <= CU2_regWrite_W;
 HU_W2_writeReg_W    <= W2_writeReg_W;
 
 W1_result_MuxMap2_SelectSig <= CU1_MFc0_W & CU1_memtoReg_W;
+W2_result_MuxMap2_SelectSig <= CU2_MFc0_W & CU2_memtoReg_W;
 
 --W1_result_MUX_MAP           : generic_2_input_mux generic map(32)
 --                                          port map(
@@ -1396,13 +1412,24 @@ W1_result_MUX_MAP2          :   generic_four_Input_Mux generic map(32)
                                                     Output  =>  W1_Result_W
                                                 );
     
-W2_result_MUX_MAP           : generic_2_input_mux generic map(32)
-                                          port map(
-                                                        MUX_in1  =>     W2_ALUout_W,
-                                                        MUX_in2  =>     W2_ReadData_W,
-                                                        Mux_SEL  =>     CU2_memtoReg_W,
-                                                        Mux_Out  =>     W2_Result_W
-                                                 );       
+--W2_result_MUX_MAP           : generic_2_input_mux generic map(32)
+--                                          port map(
+--                                                        MUX_in1  =>     W2_ALUout_W,
+--                                                        MUX_in2  =>     W2_ReadData_W,
+--                                                        Mux_SEL  =>     CU2_memtoReg_W,
+--                                                        Mux_Out  =>     W2_Result_W
+--                                                 );       
+
+W2_result_MUX_MAP2          :   generic_four_Input_Mux generic map(32)
+                                            port map(
+                                                    i1      =>  W2_ALUout_W,  
+                                                    i2      =>  W2_ReadData_W,
+                                                    i3      =>  CO_WriteData2,
+                                                    i4      =>  x"0000_0000",
+                                                    iSEL    =>  W2_result_MuxMap2_SelectSig,
+                                                    Output  =>  W2_Result_W
+                                                );
+
 
 DP_W1_unknownOp_W <= CU1_unknownOp_W;
 DP_W2_unknownOp_W <= CU2_unknownOp_W;
@@ -1433,5 +1460,14 @@ C0_mux_5select : mux_5select Port MAP(
                             Output  => CO_WriteData
                          );
 
+C0_mux_5select2 : mux_5select Port MAP( 
+                            Input1  => CauseCode_Q,
+                            Input2  => EPC_Q,
+                            muxSEL  => W2_writeReg_W,
+                            Output  => CO_WriteData2
+                         );
 
+
+ 
+ 
 end Behavioral;

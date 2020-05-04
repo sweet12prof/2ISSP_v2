@@ -67,7 +67,10 @@ entity ControlUnit is
             CU2_lui_D                   : out std_logic;         
             
             CU1_unknownOp               : out std_logic;
-            CU2_unknownOp               : out std_logic
+            CU2_unknownOp               : out std_logic;
+            
+            CU1_MFc0_D                  : out std_logic;
+            CU2_MFc0_D                  : out std_logic
                         
         );
 end ControlUnit;
@@ -96,7 +99,8 @@ component generic_Control
               CU_pcSrc_D                : out std_logic_vector(3 downto 0); 
               CU_Equal_D                : in STD_LOGIC;
               
-              CU_unknownOp               : out std_logic
+              CU_unknownOp               : out std_logic;
+              CU_MFc0_D                  : out std_logic
                              
           );
 end component;
@@ -124,8 +128,8 @@ begin
                                                             CU_BranchNotEqual_D         =>          CU1_BranchNotEqual_D,
                                                             CU_pcSrc_D                  =>          CU1_pcSrc_D         ,
                                                             CU_Equal_D                  =>          CU1_Equal_D     ,
-                                                            CU_unknownOp                =>          CU1_unknownOp   
-                                                            
+                                                            CU_unknownOp                =>          CU1_unknownOp,   
+                                                            CU_MFc0_D                  =>          CU1_MFc0_D
                                                         );  
                                                         
                                                         
@@ -151,7 +155,8 @@ begin
                                                                     CU_BranchNotEqual_D      =>    open,
                                                                     CU_pcSrc_D               =>    open,
                                                                     CU_Equal_D               =>  '0'   ,
-                                                                    CU_unknownOp                =>  CU2_unknownOp
+                                                                    CU_unknownOp                =>  CU2_unknownOp,
+                                                                    CU_MFc0_D                   =>  CU2_MFc0_D
                                                                 ); 
 
 end Behavioral;

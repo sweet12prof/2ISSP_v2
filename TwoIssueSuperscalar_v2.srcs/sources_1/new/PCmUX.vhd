@@ -56,6 +56,6 @@ begin
         i3 when "00010",
         i4 when "00100",
         i5 when "01000",
-        i6 when "10000",
+        i6 when "1----",
         X"0000_0000" when others;        
 end Behavioral;

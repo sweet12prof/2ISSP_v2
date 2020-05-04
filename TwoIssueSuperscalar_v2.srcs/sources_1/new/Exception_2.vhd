@@ -52,8 +52,8 @@ begin
                 Exception_W1   <= overflow1 or unknownOp;
                 Exception_W2   <= overflow2;
                 
-                PCBit <= '1' when (Exception_W1 <= '1' or Exception_W2 = '1') else 
-                         '0';
+                --PCBit <= '1' when (Exception_W1 <= '1' or Exception_W2 = '1') else 
+                   --      '0';
                  
                 CauseCode_Signal <= 
     x"0000_00" & "000" & Exception_W2 & Exception_W1 & overflow2 & overflow1 & unknownOp;
@@ -63,15 +63,15 @@ begin
                 EPCWrite <= overflow1 or overflow2 or unknownOp;
                 CauseWrite <= overflow1 or overflow2 or unknownOp;
                 
---     Excep_PCBit_gen :  process(Exception_W1, Exception_W2)
---                            begin 
---                                PCBit <= '0';
---                                if(Exception_W1 = '1' or  Exception_W2 = '1') then 
---                                    PCBit <= '1';
---                                else 
---                                    PCBit <= '0';
---                                end if;
+     Excep_PCBit_gen :  process(Exception_W1, Exception_W2)
+                            begin 
+                                PCBit <= '0';
+                                if(Exception_W1 = '1' or  Exception_W2 = '1') then 
+                                    PCBit <= '1';
+                                else 
+                                    PCBit <= '0';
+                                end if;
                                 
---                            end process;
+                            end process;
 
 end Behavioral;
