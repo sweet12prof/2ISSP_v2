@@ -159,7 +159,8 @@ entity Datapath is
             -----------------------------------------------------------------------
             CauseCode   : in std_logic_vector(31 downto 0);
             EPCWrite    : in std_logic;
-            CauseWrite  : in std_logic 
+            CauseWrite  : in std_logic;
+            PCBit       : in std_logic
         );
 end Datapath;
 
@@ -225,8 +226,9 @@ architecture Behavioral of Datapath is
                     i2      : in    std_logic_vector(width - 1 downto 0);
                     i3      : in    std_logic_vector(width - 1 downto 0);
                     i4      : in    std_logic_vector(width - 1 downto 0);
-                    i5      : in    std_logic_vector(width - 1 downto 0);      
-                    iSel    : in    std_logic_vector(3 downto 0);
+                    i5      : in    std_logic_vector(width - 1 downto 0);
+                    i6      : in    std_logic_vector(width - 1 downto 0);      
+                    iSel    : in    std_logic_vector(4 downto 0);
                     Output  : out    std_logic_vector(width - 1 downto 0)           
             );
     end component;
@@ -702,6 +704,8 @@ architecture Behavioral of Datapath is
       signal CU1_MFc0_M                  :  std_logic;
       signal CU1_MFc0_E                  :  std_logic;
       
+      signal PCmuxSEL                    :  std_logic_vector(4 downto 0);
+      
      
 begin
 
@@ -744,7 +748,7 @@ Pc_Adder             :   Adder32 port map (
                                                  Cout32    => open,
                                                   overflow => open                                          
                                            );
-                                                   
+PCmuxSEL <=     PCBit &  CU1_pcSrc_D;                               
 
 pc_Mux_map          :   pc_Mux generic map(32)
                                                 port map(
@@ -753,7 +757,8 @@ pc_Mux_map          :   pc_Mux generic map(32)
                                                             i3     =>   PC_Jump_D,                                                           
                                                             i4     =>   PC_Jump_D,                                                           
                                                             i5     =>   pc_Jr_D,
-                                                            iSel   =>   CU1_pcSrc_D,
+                                                            i6     =>   x"80000180",
+                                                            iSel   =>   PCmuxSEL,
                                                             Output =>   pcIn
                                                         
                                                         );

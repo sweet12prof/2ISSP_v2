@@ -61,7 +61,8 @@ architecture Behavioral of Two_Issue_Scheduler is
     constant xori     : std_logic_vector(5 downto 0) :=  "001110";
     constant slti     : std_logic_vector(5 downto 0) :=  "001010";
     constant lui      : std_logic_vector(5 downto 0) :=  "001111";
-    constant bne      : std_logic_vector(5 downto 0) :=  "000101";    
+    constant bne      : std_logic_vector(5 downto 0) :=  "000101";
+    constant mfc0     : std_logic_vector(5 downto 0) :=  "010000"; 
 
     
     
@@ -72,6 +73,7 @@ architecture Behavioral of Two_Issue_Scheduler is
     signal Swprocess_out: std_logic_vector(64 downto 0);
     signal lwprocess_out: std_logic_vector(64 downto 0);
     signal lui_process_out: std_logic_vector(64 downto 0);
+    signal mfc0_process_Out : std_logic_vector(64 downto 0);
     signal Branch_Jump_process_out: std_logic_vector(64 downto 0);
     signal finalOut : std_logic_vector(64 downto 0);
     
@@ -289,8 +291,8 @@ with opCode2 select
       
       lui_as_Instr1 : process(opCode2, Instr2_isImmediate, Instr2_isJrtype, Instr2_isJtype,rt1,rd2, rs2, rt2, Instr1, Instr2) 
             begin 
-                if(opCode2 = RType and (rt1 /= rd2)) then
-                     if((rt1 /= rs2) and (rt1 /= rt2)) then 
+                if(opCode2 = RType ) then
+                     if((rt1 /= rs2) and (rt1 /= rt2) and (rt1 /= rd2)) then 
                          lui_process_out <= '0' & Instr1 & Instr2;
                      else
                         lui_process_out <= '1' & Instr1 & x"0000_0000";
@@ -379,7 +381,53 @@ with opCode2 select
                 end if;     
             end process;
         
- finalOutputProcess :    process(opCode1,  Instr1_isImmediate_without_sw_lw, Instr1_isJrtype, Instr1_isJtype, rd1, rd2, rs2, rt2, ALUprocess_out, Immprocess_out,Branch_Jump_process_out,Swprocess_out, lwprocess_out, lui_process_out, Is_JR, Instr1 )
+        
+        mfc0_as_Instr1 : process(opCode2, Instr2_isImmediate_without_sw_lw, Instr2_isJrtype, Instr2_isJtype, rt1, rs1,rd2, rs2, rt2, Instr1, Instr2)
+                    begin 
+                        if(opCode2 = RType) then
+                     if((rt1 /= rs2) and (rt1 /= rt2) and (rt1 /= rd2)) then 
+                          mfc0_process_Out <= '0' & Instr1 & Instr2;
+                     else
+                         mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                     end if;
+                
+                elsif(Instr2_isImmediate = '1') then 
+                    if((rt1 /= rs2) and (rt1 /= rt2)) then 
+                         mfc0_process_Out <= '0' & Instr1 & Instr2;
+                    else
+                         mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                    end if;
+               
+               elsif((opCode2 = Beq or opCode2 = Bne)) then 
+                   if((rt1 /= rs2) and (rt1 /= rt2)) then     
+                          mfc0_process_Out <= '0' & Instr2 & Instr1;
+                   else
+                          mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                   end if;
+               
+               elsif(Instr2_isJrtype= '1') then  
+                    if(rt1 /= rs2) then 
+                         mfc0_process_Out <= '0' & Instr2 & Instr1;
+                    else
+                         mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                    end if;
+               
+               elsif(Instr2_isJtype = '1') then 
+                     mfc0_process_Out <= '0' & Instr2 & Instr1;
+                   
+               elsif(opCode2 = lui) then 
+                  if(( rt1 /= rt2)) then 
+                     mfc0_process_Out <= '0' & Instr1 & Instr2;
+                  else
+                     mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                  end if;
+               else 
+                     mfc0_process_Out <= '1' & Instr1 & x"0000_0000";
+                end if;
+                    end process;
+        
+        
+ finalOutputProcess :    process(opCode1,  Instr1_isImmediate_without_sw_lw, Instr1_isJrtype, Instr1_isJtype, rd1, rd2, rs2, rt2, ALUprocess_out, Immprocess_out,Branch_Jump_process_out,Swprocess_out, lwprocess_out, lui_process_out, mfc0_process_Out, Is_JR, Instr1 )
         begin 
             if((opCode1 = Rtype and Is_JR = '0')) then 
                 finalOut <=  ALUprocess_out;
@@ -398,6 +446,9 @@ with opCode2 select
             
             elsif(opCode1 = lw ) then 
                 finalOut <= lwprocess_out;
+            
+            elsif (opCode1 = mfc0) then 
+                finalOut <= mfc0_process_Out;
             else 
                 finalOut <= '1' & Instr1 & x"0000_0000";
             end if;
@@ -408,5 +459,7 @@ with opCode2 select
          EX_Instr2 <= finalOut(31 downto 0);
         
          PC_Adder_Mux <= finalOut(64);
+         
+     
         
 end Behavioral;

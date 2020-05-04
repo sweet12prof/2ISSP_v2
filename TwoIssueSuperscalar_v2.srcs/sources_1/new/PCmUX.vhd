@@ -40,8 +40,9 @@ generic (
             i2      : in    std_logic_vector(width - 1 downto 0);
             i3      : in    std_logic_vector(width - 1 downto 0);
             i4      : in    std_logic_vector(width - 1 downto 0);
-            i5      : in    std_logic_vector(width - 1 downto 0);      
-            iSel    : in    std_logic_vector(3 downto 0);
+            i5      : in    std_logic_vector(width - 1 downto 0);
+            i6      : in    std_logic_vector(width - 1 downto 0);      
+            iSel    : in    std_logic_vector(4 downto 0);
             Output  : out    std_logic_vector(width - 1 downto 0)           
         );
 end pc_Mux;
@@ -50,10 +51,11 @@ architecture Behavioral of pc_Mux is
 
 begin
     with isel select Output <= 
-        i1 when "0000",
-        i2 when "0001",
-        i3 when "0010",
-        i4 when "0100",
-        i5 when "1000",
+        i1 when "00000",
+        i2 when "00001",
+        i3 when "00010",
+        i4 when "00100",
+        i5 when "01000",
+        i6 when "10000",
         X"0000_0000" when others;        
 end Behavioral;
