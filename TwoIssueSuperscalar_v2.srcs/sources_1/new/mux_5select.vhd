@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 05/03/2020 07:28:22 PM
+-- Create Date: 05/04/2020 03:16:33 PM
 -- Design Name: 
--- Module Name: whichway_Reg - Behavioral
+-- Module Name: mux_5select - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,24 +31,21 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity whichway_Reg is
- Port ( 
-            clk, En : in std_logic;
-            d       : in std_logic_vector(31 downto 0);
-            q       : out std_logic_vector(31 downto 0)
+entity mux_5select is
+  Port ( 
+            Input1  : in std_logic_vector(31 downto 0);
+            Input2  : in std_logic_vector(31 downto 0);
+            muxSEL  : in std_logic_vector(4 downto 0);
+            Output  : out std_logic_vector(31 downto 0)
         );
-end whichway_Reg;
+end mux_5select;
 
-architecture Behavioral of whichway_Reg is
+architecture Behavioral of mux_5select is
 
 begin
-       whichWay_proc: process(clk, en)
-              begin 
-                if(rising_edge(clk)) then 
-                    if(en = '1') then
-                        q <= d;
-                    end if;
-                end if;
-              end process;
+    with muxSEL select Output <= 
+            Input1  when "01101",
+            Input2 when "01110",
+            x"0000_0000" when others;
 
 end Behavioral;
