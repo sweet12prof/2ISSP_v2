@@ -547,7 +547,9 @@ architecture Behavioral of Datapath is
      signal     CU1_ControlSigs_D            : STD_logic_vector(13 downto 0);
      signal     CU2_ControlSigs_D            : STD_logic_vector(12 downto 0);
      
-     signal Flush_DE_pipe_REG               : STD_logic;
+     signal Flush_DE_pipe_REG                  : STD_logic;
+     signal RegWriteFinal_W1                   : std_logic;
+     signal RegWriteFinal_W2                   : std_logic;
      
      
      ---------------------------------------------------------------------
@@ -822,12 +824,14 @@ HU_JrD               <=         CU1_Jr_D;
 
 PC_Jump_D <= PC_plus4_8_D(31 downto 28) & Instr1D(25 downto 0) & "00";
 
+RegWriteFinal_W1 <= CU1_regWrite_W when PCBit = '0' else '0';
+RegWriteFinal_W2 <= CU2_regWrite_W when PCBit = '0' else '0';
 
 
 registerFileMap :   registerFile port map (
                                                 clk     => clk,
-                                                W1WE    => CU1_regWrite_W,
-                                                W2WE    => CU2_regWrite_W,
+                                                W1WE    => RegWriteFinal_W1,
+                                                W2WE    => RegWriteFinal_W2,
                                                 W1A1    => Instr1D(25 downto 21),      
                                                 W1A2    => Instr1D(20 downto 16),    
                                                 W1WA    => W1_writeReg_W, 
