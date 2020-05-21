@@ -780,7 +780,7 @@ pc_Mux_map          :   pc_Mux generic map(32)
 
 --Flush_FD_pipe_REG  <= '0' when HU_StallD = '1' else '1' when (CU1_pcSrc_D(3) = '1' or  CU1_pcSrc_D(2) = '1' or CU1_pcSrc_D(1) = '1');
 
-FlushFD_pipe_REGFprocess : process(HU_stallD, CU1_pcSrc_D)
+FlushFD_pipe_REGFprocess : process(HU_stallD, CU1_pcSrc_D, PCBit)
                                 begin 
                                     if (HU_stallD = '1') then 
                                             Flush_FD_pipe_REG <= '0';

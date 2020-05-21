@@ -24,7 +24,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -48,14 +48,15 @@ generic (
 end pc_Mux;
 
 architecture Behavioral of pc_Mux is
-
+ signal Adr : integer;
 begin
-    with isel select Output <= 
-        i1 when "00000",
-        i2 when "00001",
-        i3 when "00010",
-        i4 when "00100",
-        i5 when "01000",
-        i6 when "1----",
+ Adr <= to_integer(unsigned(iSel));
+    with Adr select Output <= 
+        i1 when 0,
+        i2 when 1,
+        i3 when 2,
+        i4 when 4,
+        i5 when 8,
+        i6 when 16 to 31,
         X"0000_0000" when others;        
 end Behavioral;
